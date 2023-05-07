@@ -26,3 +26,20 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: Generate Badge
+      if: always()
+      run: |
+        echo ::set-output name=status::$(dotnet test --list-tests | grep "Total tests:" | awk '{ print $3 " tests" }')
+        echo ::set-output name=color::$(dotnet test --list-tests | grep "Total tests:" | awk '{ if ($3 > 0) print "green"; else print "red" }')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Commit status
+      if: always()
+      uses: marvinpinto/action-automatic-releases@latest
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        commit_message: "Test status: ${{ env.status }}"
+        prerelease: false
+        files: ""
+        asset_name: ""
+        overwrite: true
