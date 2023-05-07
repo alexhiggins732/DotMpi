@@ -30,10 +30,10 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-
-    - name: Set VERSION variable from tag
-      run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+    - uses: dotnet/nbgv@master
+      id: nbgv
+    - run: echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
     - name: Pack
-      run: dotnet pack --configuration Release /p:Version=${VERSION} --output .
+      run: dotnet pack --configuration Release /p:Version=${SemVer2} --output .
     - name: Push
-      run: dotnet nuget push HigginsSoft.DotMpi.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push HigginsSoft.DotMpi.${SemVer2}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
