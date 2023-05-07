@@ -1,5 +1,7 @@
 # DotMpi
 
+![Tests](https://github.com/alexhiggins732/DotMpi/workflows/Tests/badge.svg)
+
 DotMpi is a DotNet library that aims to bring multiprocessor functionality inspired by Open MPI to the DotNet world. It was developed as a solution to the limitations of DotNet's built-in `Parallel.For` function, which often leads to a lack of performance due to thread starvation.
 
 DotMpi enables control over which CPU processors to use, leading to increased performance. It was developed during the creation of a new C# math library for working with multiple precision integers, factoring numbers, and other number theory functions. The need for parallelization led to the development of DotMpi.
