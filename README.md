@@ -14,6 +14,7 @@ DotMpi is available as [nuget package](https://www.nuget.org/packages/HigginsSof
 
 Instructions for other package managers are availabe on the nuget package page.
 
+# DESCRIPTION:
 
 DotMpi is a DotNet library that aims to bring multiprocessor functionality inspired by Open MPI to the DotNet world. It was developed as a solution to the limitations of DotNet's built-in `Parallel.For` function, which often leads to a lack of performance due to thread starvation.
 
@@ -23,9 +24,6 @@ Using DotMpi, the library can now sieve numbers up to 2^31 in just half a second
 
 DotMpi also opens up possibilities for proper stress testing, load testing, and concurrency testing in DotNet, as well as easily clustering workloads across network infrastructure.
 
-## Installation
-
-To install DotMpi, simply clone the repository and add the project to your Visual Studio solution.
 
 ## Usage
 
@@ -242,7 +240,7 @@ If you are interested in contributing to DotMpi, please submit a pull request wi
 
 ## License
 
-DotMpi is licensed under the MIT License. See the [LICENSE](https://chat.openai.com/c/LICENSE) file for details.
+HigginsSoft.DotMpi is licensed under the [GNU General Public License v3.0](COPYING). See the [LICENSE](LICENSE) file for details about using and redistributing this software.
 
 ## Acknowledgments
 

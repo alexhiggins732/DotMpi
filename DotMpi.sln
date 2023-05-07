@@ -27,6 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{B7A9CAE5
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		COPYING = COPYING
 		init-repo.bat = init-repo.bat
 		version.json = version.json
 	EndProjectSection
