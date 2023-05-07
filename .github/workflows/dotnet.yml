@@ -35,6 +35,6 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Pack
-      run: dotnet pack --configuration Release /p:Version=${SemVer2} --output .
+      run: dotnet pack --configuration Release /p:Version=${{ steps.nbgv.outputs.SemVer2 }} --output .
     - name: Push
-      run: dotnet nuget push HigginsSoft.DotMpi.${SemVer2}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push HigginsSoft.DotMpi.${{ steps.nbgv.outputs.SemVer2 }}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
