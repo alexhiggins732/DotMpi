@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A1D1625E-9
 		docs\TEST.md = docs\TEST.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotMpiTests", "tests\DotMpiTests\DotMpiTests.csproj", "{E19D5B43-C3F6-46AC-9BD7-EAC3B04BD898}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,10 @@ Global
 		{9ABFFF0E-DDFD-42C8-998F-424EC6AB533E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9ABFFF0E-DDFD-42C8-998F-424EC6AB533E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9ABFFF0E-DDFD-42C8-998F-424EC6AB533E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E19D5B43-C3F6-46AC-9BD7-EAC3B04BD898}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E19D5B43-C3F6-46AC-9BD7-EAC3B04BD898}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E19D5B43-C3F6-46AC-9BD7-EAC3B04BD898}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E19D5B43-C3F6-46AC-9BD7-EAC3B04BD898}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

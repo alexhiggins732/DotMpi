@@ -7,6 +7,8 @@ namespace DotMpi
     public partial class Mpi
     {
 
+    #region ParallelFor
+
     
 
         /// <summary>
@@ -712,6 +714,11 @@ namespace DotMpi
         }
 
         
+    #endregion
+
+
+
+    #region ParallelFunctionBuilder.For
 
         public partial class ParallelFunctionBuilder
         {
@@ -1309,6 +1316,12 @@ namespace DotMpi
 
                 }
 
+    #endregion
+
+
+
+    #region ParallelFunction
+
 #pragma warning disable CS8601 // Possible null reference assignment.
 #pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -1352,6 +1365,7 @@ namespace DotMpi
                 WithArgs(Func<int, T0> value)
             {
                 this.argProvider= (i => new(value(i)));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -1364,6 +1378,7 @@ namespace DotMpi
                 WithArgs(T0 arg0)
             {
                 this.argProvider = (i => new(arg0));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -1375,7 +1390,8 @@ namespace DotMpi
             public ParallelFunction<T0, TResult>
                 WithArgs(Func<int, ArgList<T0>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -1455,6 +1471,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1)
             {
                 this.argProvider = (i => new(arg0, arg1));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -1466,7 +1483,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, TResult>
                 WithArgs(Func<int, ArgList<T0, T1>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -1546,6 +1564,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -1557,7 +1576,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -1637,6 +1657,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2, arg3));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -1648,7 +1669,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, T3, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2, T3>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -1728,6 +1750,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2, arg3, arg4));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -1739,7 +1762,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, T3, T4, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2, T3, T4>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -1819,6 +1843,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2, arg3, arg4, arg5));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -1830,7 +1855,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, T3, T4, T5, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2, T3, T4, T5>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -1910,6 +1936,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -1921,7 +1948,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, T3, T4, T5, T6, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -2001,6 +2029,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -2012,7 +2041,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -2092,6 +2122,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -2103,7 +2134,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -2183,6 +2215,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -2194,7 +2227,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -2274,6 +2308,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -2285,7 +2320,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -2365,6 +2401,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -2376,7 +2413,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -2456,6 +2494,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -2467,7 +2506,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -2547,6 +2587,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -2558,7 +2599,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -2638,6 +2680,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -2649,7 +2692,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -2729,6 +2773,7 @@ namespace DotMpi
                 WithArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14, T15 arg15)
             {
                 this.argProvider = (i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -2740,7 +2785,8 @@ namespace DotMpi
             public ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>
                 WithArgs(Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -2784,5 +2830,8 @@ namespace DotMpi
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+ 
+    #endregion
+
     }
 }

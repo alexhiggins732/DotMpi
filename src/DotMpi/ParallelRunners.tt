@@ -12,6 +12,8 @@ namespace DotMpi
     public partial class Mpi
     {
 
+    #region ParallelFor
+
     <#
 	    for(var i=0; i<16;i++)
 	    {#>
@@ -62,6 +64,11 @@ namespace DotMpi
 
         <#}#>
 
+    #endregion
+
+
+
+    #region ParallelFunctionBuilder.For
 
         public partial class ParallelFunctionBuilder
         {
@@ -107,6 +114,12 @@ namespace DotMpi
 
         <#}#>
         }
+
+    #endregion
+
+
+
+    #region ParallelFunction
 
 #pragma warning disable CS8601 // Possible null reference assignment.
 #pragma warning disable CS8604 // Possible null reference argument.
@@ -155,6 +168,7 @@ namespace DotMpi
                 WithArgs(Func<int, T0> value)
             {
                 this.argProvider= (i => new(value(i)));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -168,6 +182,7 @@ namespace DotMpi
                 WithArgs(<#	for(var j=0; j<=i;j++){#>T<#=j#> arg<#=j#><#if(j<i){#>, <#}#><#}#>)
             {
                 this.argProvider = (i => new(<#	for(var j=0; j<=i;j++){#>arg<#=j#><#if(j<i){#>, <#}#><#}#>));
+                this.ArgProvider = this.argProvider;
                 return this;
             }
           
@@ -179,7 +194,8 @@ namespace DotMpi
             public ParallelFunction<<#for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
                 WithArgs(Func<int, ArgList<<#	for(var j=0; j<=i;j++){#>T<#=j#><#if(j<i){#>, <#}#><#}#>>> argProvider)
             {
-                this.ArgProvider = argProvider;
+                this.argProvider = argProvider;
+                this.ArgProvider = this.argProvider;
                 return this;
             }
 
@@ -226,5 +242,8 @@ namespace DotMpi
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+ 
+    #endregion
+
     }
 }

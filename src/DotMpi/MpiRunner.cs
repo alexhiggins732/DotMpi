@@ -385,9 +385,11 @@ namespace DotMpi
                 Tasks.Clear();
 
 
+                var codeBase = this.GetType().Assembly.Location;
+                var exeName = Path.GetFileNameWithoutExtension(codeBase);
 
-                var currentProcess = Process.GetCurrentProcess();
-                var exeName = currentProcess.ProcessName;
+                //var currentProcess = Process.GetCurrentProcess();
+                //var exeName = currentProcess.ProcessName;
                 var exeFileName = $"{exeName}.exe";
 
                 var start = Start;
@@ -846,9 +848,24 @@ namespace DotMpi
 
         }
 
+        private static ConcurrentDictionary<string, Assembly> assemblyRefs = new();
+
         public static object Execute(RemoteCallData callData)
         {
-            var asm = Assembly.Load(callData.MethodInfo.AssemblyName);
+            var assemblyName = callData.MethodInfo.AssemblyName.Split(",")[0];
+            Assembly asm = assemblyRefs.GetOrAdd(assemblyName, x =>
+            {
+                if (File.Exists($"{assemblyName}.dll"))
+                {
+                    var fullPath = Path.GetFullPath($"{assemblyName}.dll");
+                    return Assembly.LoadFile(fullPath);
+                }
+                else
+                {
+                    return Assembly.Load(callData.MethodInfo.AssemblyName);
+                }
+            });
+
 
             var m = asm.ManifestModule.ResolveMethod(callData.MethodInfo.MetaDataToken);
             if (m == null)
