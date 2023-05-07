@@ -16,23 +16,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:        
+        fetch-depth: 0
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-        fetch-depth: 0
+    - uses: dotnet/nbgv@master
+      id: nbgv
+    - run: echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
     - name: Extract release notes
       run: |
-        git log --pretty=format:"%h - %an, %ar : %s" > RELEASE-NOTES.txt
+        git log --pretty=format:"%h - %an, %ar : %s" > docs/RELEASE-NOTES.txt
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - uses: dotnet/nbgv@master
-      id: nbgv
-    - run: echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
     - name: Pack
       run: dotnet pack --configuration Release /p:Version=${SemVer2} --output .
     - name: Push
