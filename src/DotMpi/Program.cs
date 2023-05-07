@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO.Pipes;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 namespace DotMpi
 {
@@ -116,15 +117,28 @@ namespace DotMpi
 
         }
 
+        [SupportedOSPlatformGuard("windows")]  // The platform guard attributes used
+        [SupportedOSPlatformGuard("linux")]
+        private static readonly bool _isWindowsOrLinux = OperatingSystem.IsWindows() || OperatingSystem.IsLinux();
+
         private static void SetProcessor(int clientIndex)
         {
             int processorAffinity = clientIndex % Environment.ProcessorCount;
             var affinityMask = 1 << processorAffinity;
             var p = Process.GetCurrentProcess();
 
-            Console.WriteLine($"[{DateTime.Now}] {id} Setting Processor affinity to {affinityMask} for process {p.Id}");
+
             p.PriorityClass = ProcessPriorityClass.BelowNormal;
-            p.ProcessorAffinity = (IntPtr)(affinityMask);
+            if (_isWindowsOrLinux )
+            {
+                Console.WriteLine($"[{DateTime.Now}] {id} Setting Processor affinity to {affinityMask} for process {p.Id}");
+                p.ProcessorAffinity = (IntPtr)(affinityMask);
+            }
+            else
+            {
+                Console.WriteLine($"[{DateTime.Now}] {id} Setting Processor affinity nonly supported on Windows and Linux");
+            }
+         
         }
 
         private static string pipeName = string.Empty;

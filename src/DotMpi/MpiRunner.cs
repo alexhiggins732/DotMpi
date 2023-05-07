@@ -9,6 +9,7 @@ using System.Data;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using System.Runtime.Versioning;
 
 namespace DotMpi
 {
@@ -33,12 +34,34 @@ namespace DotMpi
             }
         }
 
+        [SupportedOSPlatformGuard("windows")]  // The platform guard attributes used
+        [SupportedOSPlatformGuard("linux")]
+        private static readonly bool _isWindowsOrLinux = OperatingSystem.IsWindows() || OperatingSystem.IsLinux();
+
+        public static int GetCpuId()
+        {
+            if (_isWindowsOrLinux)
+            {
+                var p = Process.GetCurrentProcess();
+                int cpuNumber = 0;
+                for (var cpuMask = ((int)p.ProcessorAffinity); cpuMask > 1; cpuNumber++, cpuMask >>= 1) ;
+                return cpuNumber;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        private static int? cpu;
+        private static int Cpu => cpu.HasValue ? cpu.Value : (cpu = GetCpuId()).Value;
+        private static Process CurrentProcess => Process.GetCurrentProcess();
+        private static int ProcessId => CurrentProcess.Id;
+
         public static string MpiHelloWorld(int threadIndex, string message)
         {
-            var p = Process.GetCurrentProcess();
-            int cpuNumber = 0;
-            for (var cpuMask = ((int)p.ProcessorAffinity); cpuMask > 1; cpuNumber++, cpuMask >>= 1) ;
-            return @$"{message} from thread {threadIndex} on process {p} on cpu {cpuNumber}";
+         
+            return @$"{message} from thread {threadIndex} on process {ProcessId} on cpu {Cpu}";
         }
           
         public static void HelloWorldTest(int numThreads)
@@ -388,9 +411,6 @@ namespace DotMpi
                 var codeBase = this.GetType().Assembly.Location;
                 var exeName = Path.GetFileNameWithoutExtension(codeBase);
 
-                //var currentProcess = Process.GetCurrentProcess();
-                //var exeName = currentProcess.ProcessName;
-                var exeFileName = $"{exeName}.exe";
 
                 var start = Start;
                 var end = End;
@@ -408,20 +428,19 @@ namespace DotMpi
                         Logger.Error(errorMessage);
                         throw new Exception(errorMessage);
                     }
+
+
                     var pipeIdentifier = Guid.NewGuid();
                     var pipeId = pipeIdentifier.ToString().Substring(0, 8);
                     var pipeName = $"{exeName}-{pipeId}";
 
 
-
-
-
-
                     var pipeServer = new NamedPipeServerStream(pipeName);
-                    string processArgs = $"mpi {threadIndex} {pipeName}";
+                    string processArgs = $"{exeName}.dll mpi {threadIndex} {pipeName}";
+              
                     var p = new Process()
                     {
-                        StartInfo = new ProcessStartInfo(exeFileName, processArgs)
+                        StartInfo = new ProcessStartInfo("dotnet", processArgs)
                     };
 
 

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+using System.Runtime.Versioning;
 
 namespace DotMpi.MpiTests
 {
@@ -13,20 +14,34 @@ namespace DotMpi.MpiTests
     public partial class ParallelFunctionBuilderTests
     {
 
-        public static Process CurrentProcess => Process.GetCurrentProcess();
-        public static int ProcessId => CurrentProcess.Id;
-        public static int? _cpu;
-        public static int Cpu => _cpu.HasValue ? _cpu.Value : (_cpu = GetCpuId()).Value;
+        [SupportedOSPlatformGuard("windows")]  // The platform guard attributes used
+        [SupportedOSPlatformGuard("linux")]
+        private static readonly bool _isWindowsOrLinux = OperatingSystem.IsWindows() || OperatingSystem.IsLinux();
 
-        private static int? GetCpuId()
+        public static int GetCpuId()
         {
-            int cpuNumber = 0;
-            for (var cpuMask = ((int)CurrentProcess.ProcessorAffinity); cpuMask > 1; cpuNumber++, cpuMask >>= 1) ;
-            return cpuNumber;
-
-
+            if (_isWindowsOrLinux)
+            {
+                var p = Process.GetCurrentProcess();
+                int cpuNumber = 0;
+                for (var cpuMask = ((int)p.ProcessorAffinity); cpuMask > 1; cpuNumber++, cpuMask >>= 1) ;
+                return cpuNumber;
+            }
+            else
+            {
+                return -1;
+            }
         }
 
+        private static int? cpu;
+        private static int Cpu => cpu.HasValue ? cpu.Value : (cpu = GetCpuId()).Value;
+        private static Process CurrentProcess => Process.GetCurrentProcess();
+        private static int ProcessId => CurrentProcess.Id;
+
+        public static string MpiHelloWorld(int threadIndex, string message)
+        {;
+            return @$"{message} from thread {threadIndex} on process {ProcessId} on cpu {Cpu}";
+        }
 
         const int numThreads = 2;
 
