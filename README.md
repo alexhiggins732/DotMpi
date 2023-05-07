@@ -1,6 +1,6 @@
 # DotMpi
 
-![Tests](https://github.com/alexhiggins732/DotMpi/workflows/Tests/badge.svg)
+![Tests](https://github.com/alexhiggins732/DotMpi/actions/workflows/dotnet.yml/badge.svg)
 
 DotMpi is a DotNet library that aims to bring multiprocessor functionality inspired by Open MPI to the DotNet world. It was developed as a solution to the limitations of DotNet's built-in `Parallel.For` function, which often leads to a lack of performance due to thread starvation.
 
