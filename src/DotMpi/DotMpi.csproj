@@ -28,6 +28,14 @@
 
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
+	<PropertyGroup>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<SourceLinkCreate>true</SourceLinkCreate>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Deterministic>true</Deterministic>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
 
 	<ItemGroup>
 	  <None Include="..\..\LICENSE">
