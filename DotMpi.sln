@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotMpi", "src\DotMpi\DotMpi.csproj", "{9ABFFF0E-DDFD-42C8-998F-424EC6AB533E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A1D1625E-9C88-49A0-A347-0B228D822A99}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+		docs\TEST.md = docs\TEST.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9ABFFF0E-DDFD-42C8-998F-424EC6AB533E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ABFFF0E-DDFD-42C8-998F-424EC6AB533E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ABFFF0E-DDFD-42C8-998F-424EC6AB533E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ABFFF0E-DDFD-42C8-998F-424EC6AB533E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {32D0E082-A5F6-4449-9484-4A001DC6F4F9}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,71 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+using System.IO.Pipes;
+using System.Text;
+
+
+namespace DotMpi
+{
+
+
+    public partial class Mpi
+    {
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        
+        public interface IArgListProvider
+        {
+            object[] ToArray();
+        }
+        
+        public partial class ArgList
+        {
+<#
+
+	    for(var i=0; i<16;i++)
+	    {#>
+  
+            public static ArgList<<#	for(var j=0; j<=i;j++){#>T<#=j#><#if(j<i){#>, <#}#><#}#>> 
+                Create<<#	for(var j=0; j<=i;j++){#>T<#=j#><#if(j<i){#>, <#}#><#}#>>
+                (<#	for(var j=0; j<=i;j++){#>T<#=j#> arg<#=j#><#if(j<i){#>, <#}#><#}#>)
+                => new(<#	for(var j=0; j<=i;j++){#>arg<#=j#><#if(j<i){#>, <#}#><#}#>);
+               
+<#
+        }
+#>
+    }
+<#
+
+	    for(var i=0; i<16;i++)
+	    {#>
+
+        public class ArgList<<#	for(var j=0; j<=i;j++){#>T<#=j#><#if(j<i){#>, <#}#><#}#>>
+            : IArgListProvider
+        {
+            <#	for(var j=0; j<=i;j++){#>T<#=j#> arg<#=j#>;
+            <#}#>
+
+            public ArgList(<#	for(var j=0; j<=i;j++){#>T<#=j#> arg<#=j#><#if(j<i){#>, <#}#><#}#>)
+            {
+                <#	for(var j=0; j<=i;j++){#>this.arg<#=j#> = arg<#=j#>;
+                <#}#>
+
+            }
+
+            public object[] ToArray() => new object[] { <#	for(var j=0; j<=i;j++){#>arg<#=j#><#if(j<i){#>, <#}#><#}#> };
+            public static implicit operator object[](ArgList<<#	for(var j=0; j<=i;j++){#>T<#=j#><#if(j<i){#>, <#}#><#}#>> argList)
+                => argList.ToArray();
+        }
+<#
+        }
+#>
+
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    }
+}
