@@ -1,6 +1,19 @@
 # DotMpi
 
-![Tests](https://github.com/alexhiggins732/DotMpi/actions/workflows/dotnet.yml/badge.svg)
+![Nuget](https://img.shields.io/nuget/v/HigginsSoft.DotMpi.svg?style=flat-square) ![Tests](https://github.com/alexhiggins732/DotMpi/actions/workflows/dotnet.yml/badge.svg)
+
+# Installation:
+
+DotMpi is available as [nuget package](https://www.nuget.org/packages/HigginsSoft.DotMpi/) can be installed using nuget:
+- Visual Studio Package Manager
+ - `Install-Package HigginsSoft.DotMpi` 
+- DotNet CLI
+ - `dotnet add package HigginsSoft.DotMpi` 
+-  PackageReference
+ - `<PackageReference Include="HigginsSoft.DotMpi" />` 
+
+Instructions for other package managers are availabe on the nuget package page.
+
 
 DotMpi is a DotNet library that aims to bring multiprocessor functionality inspired by Open MPI to the DotNet world. It was developed as a solution to the limitations of DotNet's built-in `Parallel.For` function, which often leads to a lack of performance due to thread starvation.
 

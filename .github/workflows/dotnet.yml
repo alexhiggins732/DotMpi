@@ -24,7 +24,7 @@ jobs:
         dotnet-version: 6.0.x
     - uses: dotnet/nbgv@master
       id: nbgv
-    - run: echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
+    - run: echo 'SemVer2=${{ steps.nbgv.outputs.SimpleVersion }}'
     - name: Extract release notes
       run: |
         git log --pretty=format:"%h - %an, %ar : %s" > docs/RELEASE-NOTES.txt
@@ -35,6 +35,6 @@ jobs:
     - name: Test
       run: dotnet test --configuration Release --no-build --verbosity normal
     - name: Pack
-      run: dotnet pack --configuration Release /p:Version=${{ steps.nbgv.outputs.SemVer2 }} --output .
+      run: dotnet pack --configuration Release /p:Version=${{ steps.nbgv.outputs.SimpleVersion }} --output .
     - name: Push
-      run: dotnet nuget push HigginsSoft.DotMpi.${{ steps.nbgv.outputs.SemVer2 }}.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push HigginsSoft.DotMpi.${{ steps.nbgv.outputs.SimpleVersion }}.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
