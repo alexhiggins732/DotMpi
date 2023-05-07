@@ -9,10 +9,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A1D1625E-9
 	ProjectSection(SolutionItems) = preProject
 		LICENSE = LICENSE
 		README.md = README.md
+		docs\RELEASE-NOTES = docs\RELEASE-NOTES
 		docs\TEST.md = docs\TEST.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotMpiTests", "tests\DotMpiTests\DotMpiTests.csproj", "{E19D5B43-C3F6-46AC-9BD7-EAC3B04BD898}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{44C4DACE-8166-459C-AB55-7979E0B2D8D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{40C4FB26-7466-4666-BC3B-5E015E1D2D6B}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+		.github\workflows\release-preview.yml = .github\workflows\release-preview.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{B7A9CAE5-C11D-4081-BFF7-FF91DA8E1529}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		init-repo.bat = init-repo.bat
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +47,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{40C4FB26-7466-4666-BC3B-5E015E1D2D6B} = {44C4DACE-8166-459C-AB55-7979E0B2D8D4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {32D0E082-A5F6-4449-9484-4A001DC6F4F9}

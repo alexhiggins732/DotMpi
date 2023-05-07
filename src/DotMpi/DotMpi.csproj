@@ -1,52 +1,90 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Company>HigginsSoft</Company>
+		<PackageId>HigginsSoft.DotMpi</PackageId>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>HigginsSoft.DotMpi</Title>
+		<Authors>HigginsSoft, alexhiggins732</Authors>
 
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
+		<Product>HigginsSoft.DotMpi</Product>
 
-  <ItemGroup>
-    <None Update="ArgList.tt">
-      <LastGenOutput>ArgList.cs</LastGenOutput>
-      <Generator>TextTemplatingFileGenerator</Generator>
-    </None>
-    <None Update="ParallelRunners.tt">
-      <LastGenOutput>ParallelRunners.cs</LastGenOutput>
-      <Generator>TextTemplatingFileGenerator</Generator>
-    </None>
-    <None Update="MpiRunnerOverloads.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MpiRunnerOverloads.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
+		<Description>DotMpi is a DotNet library that aims to bring multiprocessor functionality inspired by Open MPI to the DotNet world.</Description>
 
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
+		<Copyright>HigginsSoft.DotMpi</Copyright>
 
-  <ItemGroup>
-    <Compile Update="MpiRunnerOverloads.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>MpiRunnerOverloads.tt</DependentUpon>
-    </Compile>
-    <Compile Update="ArgList.cs">
-      <DependentUpon>ArgList.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="ParallelRunners.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ParallelRunners.tt</DependentUpon>
-    </Compile>
-  </ItemGroup>
+		<PackageProjectUrl>https://github.com/alexhiggins732/DotMpi/</PackageProjectUrl>
 
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+
+		<RepositoryUrl>https://github.com/alexhiggins732/DotMpi/</RepositoryUrl>
+
+		<PackageTags>csharp,mpi,dotmpi,parallel,parallel processing,multiprocessor,parallel processes</PackageTags>
+
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Include="..\..\LICENSE">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+
+
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="ArgList.tt">
+			<LastGenOutput>ArgList.cs</LastGenOutput>
+			<Generator>TextTemplatingFileGenerator</Generator>
+		</None>
+		<None Update="ParallelRunners.tt">
+			<LastGenOutput>ParallelRunners.cs</LastGenOutput>
+			<Generator>TextTemplatingFileGenerator</Generator>
+		</None>
+		<None Update="MpiRunnerOverloads.tt">
+			<Generator>TextTemplatingFileGenerator</Generator>
+			<LastGenOutput>MpiRunnerOverloads.cs</LastGenOutput>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="MpiRunnerOverloads.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>MpiRunnerOverloads.tt</DependentUpon>
+		</Compile>
+		<Compile Update="ArgList.cs">
+			<DependentUpon>ArgList.tt</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+		<Compile Update="ParallelRunners.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>ParallelRunners.tt</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<Target Name="PrepareReleaseNotes" BeforeTargets="GenerateNuspec">
+		<PropertyGroup>
+			<Description>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../docs/RELEASE-NOTES"))</Description>
+		</PropertyGroup>
+	</Target>
 </Project>
