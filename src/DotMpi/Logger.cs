@@ -13,45 +13,81 @@
 */
 
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace DotMpi
 {
     public class Logger
     {
-        public static bool DebugEnabled = false;
-        public static bool VerboseEnabled = false;
-        public static bool ErrorEnabled = true;
-        public static bool InfoEnabled = false;
+        static bool staticDebugEnabled;
+        static bool staticVerboseEnabled = false;
+        static bool staticErrorEnabled = true;
+        static bool staticInfoEnabled = false;
 
-        public static void Debug(string message)
+        public static bool StaticDebugEnabled { get => staticDebugEnabled; set => Instance.DebugEnabled = staticDebugEnabled = value; }
+        public static bool StaticVerboseEnabled { get => staticVerboseEnabled; set => Instance.verboseEnabled = staticVerboseEnabled = value; }
+        public static bool StaticErrorEnabled { get => staticErrorEnabled; set => Instance.ErrorEnabled = staticErrorEnabled = value; }
+        public static bool StaticInfoEnabled { get => staticInfoEnabled; set => Instance.InfoEnabled = staticInfoEnabled = value; }
+
+        private bool debugEnabled;
+        private bool verboseEnabled;
+        private bool errorEnabled;
+        private bool infoEnabled;
+
+        public bool DebugEnabled { get => debugEnabled; set => debugEnabled = value; }
+        public bool VerboseEnabled { get => verboseEnabled; set => verboseEnabled = value; }
+        public bool ErrorEnabled { get => errorEnabled; set => errorEnabled = value; }
+        public bool InfoEnabled { get => infoEnabled; set => infoEnabled = value; }
+
+        public static Logger Instance { get; private set; }
+        public TextWriter OutputStream { get; set; }
+
+        static Logger()
         {
-            if (!DebugEnabled) return;
-            Console.WriteLine($"[{nameof(Debug)}] {message}");
-        }
-        public static void Verbose(string message)
-        {
-            if (!VerboseEnabled) return;
-            Console.WriteLine($"[{nameof(Verbose)}] {message}");
+            Instance = new Logger(StaticDebugEnabled, StaticVerboseEnabled, StaticErrorEnabled, StaticInfoEnabled);
+            Instance.OutputStream = Console.Out;
         }
 
-        public static void Error(string message, Exception ex)
+        public Logger(bool debugEnabled, bool verboseEnabled, bool errorEnabled, bool infoEnabled, TextWriter? output = null)
         {
-            if (!ErrorEnabled) return;
+            OutputStream = output ?? Console.Out;
+
+            this.debugEnabled = debugEnabled;
+            this.verboseEnabled = verboseEnabled;
+            this.errorEnabled = errorEnabled;
+            this.infoEnabled = infoEnabled;
+
+        }
+
+        public void Debug(string message)
+        {
+            if (!debugEnabled) return;
+            OutputStream.WriteLine($"[{nameof(Debug)}] {message}");
+        }
+        public void Verbose(string message)
+        {
+            if (!verboseEnabled) return;
+            OutputStream.WriteLine($"[{nameof(Verbose)}] {message}");
+        }
+
+        public void Error(string message, Exception ex)
+        {
+            if (!errorEnabled) return;
             message += Environment.NewLine + ex.ToString();
-            Console.WriteLine($"[{nameof(Error)}] {message}");
+            OutputStream.WriteLine($"[{nameof(Error)}] {message}");
         }
-        public static void Error(string message)
+        public void Error(string message)
         {
-            if (!ErrorEnabled) return;
+            if (!errorEnabled) return;
             var stackTrace = new StackTrace(true);
             message += Environment.NewLine + stackTrace.ToString();
-            Console.WriteLine($"[{nameof(Error)}] {message}");
+            OutputStream.WriteLine($"[{nameof(Error)}] {message}");
         }
 
-        public static void Info(string message)
+        public void Info(string message)
         {
-            if (!InfoEnabled) return;
-            Console.WriteLine($"[{nameof(Info)}] {message}");
+            if (!infoEnabled) return;
+            OutputStream.WriteLine($"[{nameof(Info)}] {message}");
         }
     }
 }

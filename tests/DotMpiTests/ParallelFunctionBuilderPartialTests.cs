@@ -1,17 +1,4 @@
-﻿/*
- Copyright (c) 2023 HigginsSoft
- Written by Alexander Higgins https://github.com/alexhiggins732/ 
- 
- Source code for this software can be found at https://github.com/alexhiggins732/DotMpi
- 
- This software is licensce under GNU General Public License version 3 as described in the LICENSE
- file at https://github.com/alexhiggins732/DotMpi/LICENSE
- 
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
-
-*/
-
+﻿
 using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static DotMpi.Mpi;
 
 namespace DotMpi.MpiTests
 {
@@ -79,7 +67,7 @@ namespace DotMpi.MpiTests
     
         
         [TestMethod()]
-        public void ForTest00()
+        public void ParallelForTest_1_00()
         {
             Func<int, string> target = For;
 
@@ -94,11 +82,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest01()
+        public void ParallelForTest_1_01()
         {
             Func<int, int, string> target = For;
 
@@ -113,11 +100,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest02()
+        public void ParallelForTest_1_02()
         {
             Func<int, int, int, string> target = For;
 
@@ -132,11 +118,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest03()
+        public void ParallelForTest_1_03()
         {
             Func<int, int, int, int, string> target = For;
 
@@ -151,11 +136,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest04()
+        public void ParallelForTest_1_04()
         {
             Func<int, int, int, int, int, string> target = For;
 
@@ -170,11 +154,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest05()
+        public void ParallelForTest_1_05()
         {
             Func<int, int, int, int, int, int, string> target = For;
 
@@ -189,11 +172,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest06()
+        public void ParallelForTest_1_06()
         {
             Func<int, int, int, int, int, int, int, string> target = For;
 
@@ -208,11 +190,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest07()
+        public void ParallelForTest_1_07()
         {
             Func<int, int, int, int, int, int, int, int, string> target = For;
 
@@ -227,11 +208,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest08()
+        public void ParallelForTest_1_08()
         {
             Func<int, int, int, int, int, int, int, int, int, string> target = For;
 
@@ -246,11 +226,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest09()
+        public void ParallelForTest_1_09()
         {
             Func<int, int, int, int, int, int, int, int, int, int, string> target = For;
 
@@ -265,11 +244,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest10()
+        public void ParallelForTest_1_10()
         {
             Func<int, int, int, int, int, int, int, int, int, int, int, string> target = For;
 
@@ -284,11 +262,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest11()
+        public void ParallelForTest_1_11()
         {
             Func<int, int, int, int, int, int, int, int, int, int, int, int, string> target = For;
 
@@ -303,11 +280,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest12()
+        public void ParallelForTest_1_12()
         {
             Func<int, int, int, int, int, int, int, int, int, int, int, int, int, string> target = For;
 
@@ -322,11 +298,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest13()
+        public void ParallelForTest_1_13()
         {
             Func<int, int, int, int, int, int, int, int, int, int, int, int, int, int, string> target = For;
 
@@ -341,11 +316,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest14()
+        public void ParallelForTest_1_14()
         {
             Func<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, string> target = For;
 
@@ -360,11 +334,10 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
-
         }
-    
+        
         [TestMethod()]
-        public void ForTest15()
+        public void ParallelForTest_1_15()
         {
             Func<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, string> target = For;
 
@@ -379,10 +352,585 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
+        }
+        
+        
+        [TestMethod]
+        public void ParallelForTest_2_00()
+        {
+            Func<int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
 
         }
-    
+        
+        [TestMethod]
+        public void ParallelForTest_2_01()
+        {
+            Func<int, int, string> target = For;
 
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_02()
+        {
+            Func<int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_03()
+        {
+            Func<int, int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2, 3);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2, 3 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_04()
+        {
+            Func<int, int, int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2, 3, 4);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2, 3, 4 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_05()
+        {
+            Func<int, int, int, int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2, 3, 4, 5);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2, 3, 4, 5 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int, int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_06()
+        {
+            Func<int, int, int, int, int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2, 3, 4, 5, 6);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2, 3, 4, 5, 6 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int, int, int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_07()
+        {
+            Func<int, int, int, int, int, int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2, 3, 4, 5, 6, 7);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2, 3, 4, 5, 6, 7 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int, int, int, int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_08()
+        {
+            Func<int, int, int, int, int, int, int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2, 3, 4, 5, 6, 7, 8);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int, int, int, int, int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_09()
+        {
+            Func<int, int, int, int, int, int, int, int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int, int, int, int, int, int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_10()
+        {
+            Func<int, int, int, int, int, int, int, int, int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int, int, int, int, int, int, int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_11()
+        {
+            Func<int, int, int, int, int, int, int, int, int, int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int, int, int, int, int, int, int, int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_12()
+        {
+            Func<int, int, int, int, int, int, int, int, int, int, int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int, int, int, int, int, int, int, int, int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_13()
+        {
+            Func<int, int, int, int, int, int, int, int, int, int, int, int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int, int, int, int, int, int, int, int, int, int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_14()
+        {
+            Func<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
+        [TestMethod]
+        public void ParallelForTest_2_15()
+        {
+            Func<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
+
+        }
+        
     }
 
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
@@ -11,21 +11,13 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>HigginsSoft.DotMpi</Title>
 		<Authors>HigginsSoft, alexhiggins732</Authors>
-
 		<Product>HigginsSoft.DotMpi</Product>
-
 		<Description>DotMpi is a DotNet library that aims to bring multiprocessor functionality inspired by Open MPI to the DotNet world.</Description>
-
 		<Copyright>HigginsSoft.DotMpi</Copyright>
-
 		<PackageProjectUrl>https://github.com/alexhiggins732/DotMpi/</PackageProjectUrl>
-
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-
 		<RepositoryUrl>https://github.com/alexhiggins732/DotMpi/</RepositoryUrl>
-
 		<PackageTags>csharp,mpi,dotmpi,parallel,parallel processing,multiprocessor,parallel processes</PackageTags>
-
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
 	<ItemGroup>
@@ -38,6 +30,11 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<Deterministic>true</Deterministic>
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+		<!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 	</PropertyGroup>
 
 	<ItemGroup>

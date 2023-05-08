@@ -1,18 +1,4 @@
-﻿/*
- Copyright (c) 2023 HigginsSoft
- Written by Alexander Higgins https://github.com/alexhiggins732/ 
- 
- Source code for this software can be found at https://github.com/alexhiggins732/DotMpi
- 
- This software is licensce under GNU General Public License version 3 as described in the LICENSE
- file at https://github.com/alexhiggins732/DotMpi/LICENSE
- 
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
-
-*/
-
-using System.IO.Pipes;
+﻿using System.IO.Pipes;
 using System.Text;
 
 
@@ -46,8 +32,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -63,9 +47,45 @@ namespace DotMpi
                 T0 arg0            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0)));
+                .For(target).WithArgs(arg0);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, TResult>
+            ParallelFor<T0, TResult>(
+                int numThreads,
+                Func<T0, TResult> target,
+                Func<int, ArgList<T0>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, TResult>
+            ParallelFor<T0, TResult>(
+                int numThreads,
+                Func<T0, TResult> target,
+                T0 arg0            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0);
+                return builder;
+            }
 
         
 
@@ -90,8 +110,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -107,9 +125,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1)));
+                .For(target).WithArgs(arg0, arg1);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, TResult>
+            ParallelFor<T0, T1, TResult>(
+                int numThreads,
+                Func<T0, T1, TResult> target,
+                Func<int, ArgList<T0, T1>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, TResult>
+            ParallelFor<T0, T1, TResult>(
+                int numThreads,
+                Func<T0, T1, TResult> target,
+                T0 arg0, T1 arg1            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1);
+                return builder;
+            }
 
         
 
@@ -134,8 +188,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -151,9 +203,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2)));
+                .For(target).WithArgs(arg0, arg1, arg2);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, TResult>
+            ParallelFor<T0, T1, T2, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, TResult> target,
+                Func<int, ArgList<T0, T1, T2>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, TResult>
+            ParallelFor<T0, T1, T2, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2);
+                return builder;
+            }
 
         
 
@@ -178,8 +266,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -195,9 +281,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2, T3 arg3            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2, arg3)));
+                .For(target).WithArgs(arg0, arg1, arg2, arg3);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, TResult>
+            ParallelFor<T0, T1, T2, T3, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, TResult> target,
+                Func<int, ArgList<T0, T1, T2, T3>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, TResult>
+            ParallelFor<T0, T1, T2, T3, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2, T3 arg3            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2, arg3);
+                return builder;
+            }
 
         
 
@@ -222,8 +344,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -239,9 +359,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2, arg3, arg4)));
+                .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, TResult> target,
+                Func<int, ArgList<T0, T1, T2, T3, T4>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4);
+                return builder;
+            }
 
         
 
@@ -266,8 +422,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -283,9 +437,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2, arg3, arg4, arg5)));
+                .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, TResult> target,
+                Func<int, ArgList<T0, T1, T2, T3, T4, T5>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5);
+                return builder;
+            }
 
         
 
@@ -310,8 +500,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -327,9 +515,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6)));
+                .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, TResult> target,
+                Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+                return builder;
+            }
 
         
 
@@ -354,8 +578,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -371,9 +593,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7)));
+                .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, TResult> target,
+                Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+                return builder;
+            }
 
         
 
@@ -398,8 +656,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -415,9 +671,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)));
+                .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, TResult> target,
+                Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+                return builder;
+            }
 
         
 
@@ -442,8 +734,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -459,9 +749,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)));
+                .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> target,
+                Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+                return builder;
+            }
 
         
 
@@ -486,8 +812,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -503,9 +827,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)));
+                .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> target,
+                Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
+                return builder;
+            }
 
         
 
@@ -530,8 +890,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -547,9 +905,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)));
+                .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> target,
+                Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
+                return builder;
+            }
 
         
 
@@ -574,8 +968,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -591,9 +983,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)));
+                .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> target,
+                Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+                return builder;
+            }
 
         
 
@@ -618,8 +1046,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -635,9 +1061,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)));
+                .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> target,
+                Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
+                return builder;
+            }
 
         
 
@@ -662,8 +1124,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -679,9 +1139,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)));
+                .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> target,
+                Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+                return builder;
+            }
 
         
 
@@ -706,8 +1202,6 @@ namespace DotMpi
             return builder;
         }
 
-
-
         /// <summary>
         /// Multi processor parallel runner, accepting an strongly typed generic arguments
         /// </summary>
@@ -723,9 +1217,45 @@ namespace DotMpi
                 T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14, T15 arg15            )
         {
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
-                .For(target).WithArgs((i => new(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)));
+                .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15);
             return builder;
         }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> target,
+                Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>
+            ParallelFor<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>(
+                int numThreads,
+                Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> target,
+                T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14, T15 arg15            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15);
+                return builder;
+            }
 
         
     #endregion
@@ -1346,6 +1876,7 @@ namespace DotMpi
         public class ParallelFunction<T0, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0>> argProvider = null!;
 
@@ -1361,13 +1892,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, TResult> Target { get; }
 
             
             /// <summary>
@@ -1409,7 +1946,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -1427,11 +1964,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -1453,6 +1985,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1>> argProvider = null!;
 
@@ -1468,13 +2001,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, TResult> Target { get; }
 
             
             /// <summary>
@@ -1502,7 +2041,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -1520,11 +2059,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -1546,6 +2080,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2>> argProvider = null!;
 
@@ -1561,13 +2096,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, TResult> Target { get; }
 
             
             /// <summary>
@@ -1595,7 +2136,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -1613,11 +2154,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -1639,6 +2175,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, T3, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2, T3>> argProvider = null!;
 
@@ -1654,13 +2191,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, T3, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2, T3 arg3)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, T3, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2, arg3);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, T3, TResult> Target { get; }
 
             
             /// <summary>
@@ -1688,7 +2231,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -1706,11 +2249,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -1732,6 +2270,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, T3, T4, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2, T3, T4>> argProvider = null!;
 
@@ -1747,13 +2286,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, T3, T4, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, T3, T4, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2, arg3, arg4);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, T3, T4, TResult> Target { get; }
 
             
             /// <summary>
@@ -1781,7 +2326,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -1799,11 +2344,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -1825,6 +2365,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, T3, T4, T5, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2, T3, T4, T5>> argProvider = null!;
 
@@ -1840,13 +2381,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, T3, T4, T5, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, T3, T4, T5, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2, arg3, arg4, arg5);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, T3, T4, T5, TResult> Target { get; }
 
             
             /// <summary>
@@ -1874,7 +2421,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -1892,11 +2439,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -1918,6 +2460,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, T3, T4, T5, T6, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6>> argProvider = null!;
 
@@ -1933,13 +2476,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, T3, T4, T5, T6, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, T3, T4, T5, T6, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, T3, T4, T5, T6, TResult> Target { get; }
 
             
             /// <summary>
@@ -1967,7 +2516,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -1985,11 +2534,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -2011,6 +2555,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7>> argProvider = null!;
 
@@ -2026,13 +2571,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, T3, T4, T5, T6, T7, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, T3, T4, T5, T6, T7, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, T3, T4, T5, T6, T7, TResult> Target { get; }
 
             
             /// <summary>
@@ -2060,7 +2611,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -2078,11 +2629,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -2104,6 +2650,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8>> argProvider = null!;
 
@@ -2119,13 +2666,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, TResult> Target { get; }
 
             
             /// <summary>
@@ -2153,7 +2706,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -2171,11 +2724,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -2197,6 +2745,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>> argProvider = null!;
 
@@ -2212,13 +2761,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> Target { get; }
 
             
             /// <summary>
@@ -2246,7 +2801,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -2264,11 +2819,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -2290,6 +2840,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>> argProvider = null!;
 
@@ -2305,13 +2856,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> Target { get; }
 
             
             /// <summary>
@@ -2339,7 +2896,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -2357,11 +2914,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -2383,6 +2935,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>> argProvider = null!;
 
@@ -2398,13 +2951,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> Target { get; }
 
             
             /// <summary>
@@ -2432,7 +2991,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -2450,11 +3009,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -2476,6 +3030,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>> argProvider = null!;
 
@@ -2491,13 +3046,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> Target { get; }
 
             
             /// <summary>
@@ -2525,7 +3086,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -2543,11 +3104,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -2569,6 +3125,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>> argProvider = null!;
 
@@ -2584,13 +3141,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> Target { get; }
 
             
             /// <summary>
@@ -2618,7 +3181,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -2636,11 +3199,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -2662,6 +3220,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>> argProvider = null!;
 
@@ -2677,13 +3236,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> Target { get; }
 
             
             /// <summary>
@@ -2711,7 +3276,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -2729,11 +3294,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))
@@ -2755,6 +3315,7 @@ namespace DotMpi
         public class ParallelFunction<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> 
             : ParallelFunctionRunner<TResult>
         {
+            static Logger Logger = Logger.Instance;
 
             private Func<int, ArgList<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>> argProvider = null!;
 
@@ -2770,13 +3331,19 @@ namespace DotMpi
                 Target = target;
             }
 
-            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> Target { get; }
-
-            public TResult Execute(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14, T15 arg15)
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(int numThreads, Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> target)
+                : base(0, numThreads)
             {
-                var result = MpiRunner.Exec(Target, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15);
-                return result;
+                Target = target;
             }
+
+            public Func<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> Target { get; }
 
             
             /// <summary>
@@ -2804,7 +3371,7 @@ namespace DotMpi
                 return this;
             }
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -2822,11 +3389,6 @@ namespace DotMpi
                 {
                     var debugJson = callData.DebugJson();
                     Logger.Info($"[{DateTime.Now}] {id} Sending call data to {pipeName} {threadIndex}: {debugJson}");
-                }
-
-                if(args!=null && args.Length> 0 && (int)args[0] != threadIndex)
-                {
-                    throw new Exception("Invalid arg for {threadIndex}: {args[0]}");
                 }
 
                 using (var bw = new BinaryWriter(pipeServer, Encoding.UTF8, true))

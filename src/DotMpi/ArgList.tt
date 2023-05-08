@@ -46,17 +46,17 @@ namespace DotMpi
         public class ArgList<<#	for(var j=0; j<=i;j++){#>T<#=j#><#if(j<i){#>, <#}#><#}#>>
             : IArgListProvider
         {
-            <#	for(var j=0; j<=i;j++){#>T<#=j#> arg<#=j#>;
+            <#	for(var j=0; j<=i;j++){#>public T<#=j#> Arg<#=j#> {get;}
             <#}#>
 
             public ArgList(<#	for(var j=0; j<=i;j++){#>T<#=j#> arg<#=j#><#if(j<i){#>, <#}#><#}#>)
             {
-                <#	for(var j=0; j<=i;j++){#>this.arg<#=j#> = arg<#=j#>;
+                <#	for(var j=0; j<=i;j++){#>this.Arg<#=j#> = arg<#=j#>;
                 <#}#>
 
             }
 
-            public object[] ToArray() => new object[] { <#	for(var j=0; j<=i;j++){#>arg<#=j#><#if(j<i){#>, <#}#><#}#> };
+            public object[] ToArray() => new object[] { <#	for(var j=0; j<=i;j++){#>Arg<#=j#><#if(j<i){#>, <#}#><#}#> };
             public static implicit operator object[](ArgList<<#	for(var j=0; j<=i;j++){#>T<#=j#><#if(j<i){#>, <#}#><#}#>> argList)
                 => argList.ToArray();
         }

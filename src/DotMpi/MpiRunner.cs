@@ -23,222 +23,18 @@ using System.Data;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
-using System.Runtime.Versioning;
+using static DotMpi.Mpi;
+using Newtonsoft.Json.Linq;
 
 namespace DotMpi
 {
-    internal partial class MpiRunnerTest
-    {
-        static int getOne() => 1;
-        public static void TestExecute()
-        {
-
-            var result = MpiRunner.Exec(getOne);
-            if (result != getOne())
-            {
-                throw new Exception($"{nameof(TestExecute)} failed. Expected {getOne()} Actual: {result}");
-            }
-        }
-        public static void TestHelloWorldExec(int numThreads)
-        {
-            Func<int, HelloWorldParallelResult> target = HelloWorld;
-            for (var i = 0; i < numThreads; i++)
-            {
-                var result = MpiRunner.Exec(target, i);
-            }
-        }
-
-        [SupportedOSPlatformGuard("windows")]  // The platform guard attributes used
-        [SupportedOSPlatformGuard("linux")]
-        private static readonly bool _isWindowsOrLinux = OperatingSystem.IsWindows() || OperatingSystem.IsLinux();
-
-        public static int GetCpuId()
-        {
-            if (_isWindowsOrLinux)
-            {
-                var p = Process.GetCurrentProcess();
-                int cpuNumber = 0;
-                for (var cpuMask = ((int)p.ProcessorAffinity); cpuMask > 1; cpuNumber++, cpuMask >>= 1) ;
-                return cpuNumber;
-            }
-            else
-            {
-                return -1;
-            }
-        }
-
-        private static int? cpu;
-        private static int Cpu => cpu.HasValue ? cpu.Value : (cpu = GetCpuId()).Value;
-        private static Process CurrentProcess => Process.GetCurrentProcess();
-        private static int ProcessId => CurrentProcess.Id;
-
-        public static string MpiHelloWorld(int threadIndex, string message)
-        {
-         
-            return @$"{message} from thread {threadIndex} on process {ProcessId} on cpu {Cpu}";
-        }
-          
-        public static void HelloWorldTest(int numThreads)
-        {
-            Func<int, string, string> target = MpiHelloWorld;
-            var timer = Stopwatch.StartNew();
-            var runner = Mpi
-                .ParallelFor(0, numThreads, target, i => new(i, "Hello World"))
-                .Run()
-                .Wait();
-
-            for (var i = 0; i < numThreads; i++)
-            {
-                var result = runner.Results[i];
-                Console.WriteLine($"[{DateTime.Now}] Result {i}: {result}");
-            }
-
-            Console.WriteLine($"[{DateTime.Now}] Completed {numThreads} process threads in {timer.Elapsed}");
-            timer.Stop();
-        }
-
-
-        public static void TestHelloWorldParallel(int numThreads)
-        {
-            Func<int, HelloWorldParallelResult> target = HelloWorld;
-
-            var timer = Stopwatch.StartNew();
-            var para = Mpi.Parallel(numThreads);
-
-            var runner = para.For(target).WithArgs(HelloWorldArgProvider);
-
-            var controller = runner.WithArgs(HelloWorldArgProvider);
-
-            controller = Mpi
-                .ParallelFor(0, numThreads, target, HelloWorldArgProvider);
-
-            //var controller = runner.Run((Mpi.ArgProvider)((i) => new object[] { HelloWorldArgProvider(i) }));
-
-            controller.Wait();
-            timer.Stop();
-            for (var i = 0; i < numThreads; i++)
-            {
-                var result = controller.Results[i];
-                Console.WriteLine($"[{DateTime.Now}] Result {i}: {result.Status}");
-            }
-            Console.WriteLine($"[{DateTime.Now}] Completed {numThreads} in {timer.Elapsed}");
-
-
-        }
-
-        public static int HelloWorldArgProvider(int threadIndex)
-            => threadIndex;
-
-        public static HelloWorldParallelResult HelloWorld(int threadIndex)
-        {
-            var p = Process.GetCurrentProcess();
-            var id = p.Id;
-            var result = new HelloWorldParallelResult(message: "Hello World", id: id, threadIndex);
-            return result;
-        }
-
-        public class HelloWorldParallelResult
-        {
-            public int Id { get; set; }
-            public string Message { get; set; }
-            public int ThreadIndex { get; }
-            public string Status => $"{Message} from thread {ThreadIndex} on process {Id}.";
-            public HelloWorldParallelResult(string message, int id, int threadIndex)
-            {
-                this.Message = message;
-                this.Id = id;
-                ThreadIndex = threadIndex;
-            }
-        }
-
-
-        public static int Add(int a, int b) => a + b;
-        public static void TestAddParallel(int numThreads)
-        {
-            Func<int, int, int> target = Add;
-            var timer = Stopwatch.StartNew();
-
-
-
-            var runner = Mpi
-                .Parallel(numThreads)
-                .For(target, i => new(i, i + 1))
-                .WithArgs(i => Mpi.ArgList.Create(i, i + 1))
-                .WithArgs(0, 1)
-                .WithArgs(i => new(i, i + 1))
-                //.WithArgs(pv)
-                .Run()
-                .Wait();
-
-
-            timer.Stop();
-
-            Console.WriteLine($"[{DateTime.Now}] Completed {numThreads} in {timer.Elapsed}"); ;
-
-            for (var i = 0; i < numThreads; i++)
-            {
-                var result = runner.Results[i];
-                Console.WriteLine($"[{DateTime.Now}] Result {i}: {result}");
-            }
-            Console.WriteLine($"[{DateTime.Now}] Completed {numThreads} in {timer.Elapsed}");
-        }
-
-        public static void TestAddWithLambdaArgProvider(int numThreads)
-        {
-            Func<int, int, int> target = Add;
-            var timer = Stopwatch.StartNew();
-            var runner = Mpi
-                .Parallel(numThreads)
-                .For(target, i =>
-                {
-                    var arg0 = i;
-                    var arg2 = i + 1;
-                    return new(arg0, arg2);
-                })
-                .Run()
-                .Wait();
-            timer.Stop();
-
-            Console.WriteLine($"[{DateTime.Now}] Completed {numThreads} in {timer.Elapsed}"); ;
-
-            for (var i = 0; i < numThreads; i++)
-            {
-                var result = runner.Results[i];
-                Console.WriteLine($"[{DateTime.Now}] Result {i}: {result}");
-            }
-            Console.WriteLine($"[{DateTime.Now}] Completed {numThreads} in {timer.Elapsed}");
-
-        }
-
-        public static void TestAddOneLine(int numThreads)
-        {
-
-            Func<int, int, int> target = Add;
-            var timer = Stopwatch.StartNew();
-            var runner = Mpi
-                .ParallelFor(0, numThreads, target, i => new(i, i + 1))
-                .Run()
-                .Wait(); 
-
-            timer.Stop();
-
-            Console.WriteLine($"[{DateTime.Now}] Completed {numThreads} in {timer.Elapsed}"); ;
-
-            for (var i = 0; i < numThreads; i++)
-            {
-                var result = runner.Results[i];
-                Console.WriteLine($"[{DateTime.Now}] Result {i}: {result}");
-            }
-            Console.WriteLine($"[{DateTime.Now}] Completed {numThreads} in {timer.Elapsed}");
-
-        }
-    }
 
     public partial class Mpi
     {
         private static string pipeName = string.Empty;
         private static string id => $"[{pipeName}]";
         public static string PipeName { get => pipeName; set => MpiRunner.id = pipeName = value; }
+        static Logger Logger = Logger.Instance;
 
         public partial class ParallelFunctionBuilder
         {
@@ -287,14 +83,66 @@ namespace DotMpi
 
         }
 
-        public interface IArgProvider
+
+        /// <summary>
+        /// Provides data for the <see cref="FunctionResultReturned"/> event.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the function result.</typeparam>
+        public class FunctionResultEventArgs<TResult> : EventArgs
         {
-            object[] GetArguments(int threadIndex);
+            /// <summary>
+            /// Gets the index of the thread that returned the result.
+            /// </summary>
+            public int ThreadIndex { get; }
+
+            /// <summary>
+            /// Gets the ID of the process that the thread was running in.
+            /// </summary>
+            public int ProcessId { get; }
+
+            /// <summary>
+            /// Gets the name of the named pipe that was used for communication.
+            /// </summary>
+            public string PipeName { get; }
+
+            /// <summary>
+            /// Gets the argument provider used to supply arguments for the executed parallel function.
+            /// </summary>
+            public IArgProvider ArgProvider { get; }
+
+            /// <summary>
+            /// Gets the function result as a nullable value.
+            /// </summary>
+            public TResult? Result { get => SerializedResult.Result; }
+
+            /// <summary>
+            /// Gets the function result as a serializable value.
+            /// </summary>
+            public SerializableValue<TResult?> SerializedResult { get; }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="FunctionResultEventArgs{TResult}"/> class
+            /// with the specified arguments.
+            /// </summary>
+            /// <param name="threadIndex">The index of the thread that returned the result.</param>
+            /// <param name="processId">The ID of the process that the thread was running in.</param>
+            /// <param name="pipeName">The name of the named pipe that was used for communication.</param>
+            /// <param name="argProvider">The provider used to supply arguments to the function.</param>
+            /// <param name="result">The function result as a serializable value.</param>
+            public FunctionResultEventArgs(
+                int threadIndex,
+                int processId,
+                string pipeName,
+                IArgProvider argProvider,
+                SerializableValue<TResult?> result)
+            {
+                ThreadIndex = threadIndex;
+                ProcessId = processId;
+                PipeName = pipeName;
+                ArgProvider = argProvider;
+                SerializedResult = result;
+            }
         }
-
-
-
-  
 
         /// <summary>
         /// A parallel function runner that coordinates execution on multiple processors.
@@ -303,6 +151,8 @@ namespace DotMpi
         public abstract class ParallelFunctionRunner<TResult>
 
         {
+
+            static Logger Logger = Logger.Instance;
             /// <summary>
             /// The inclusive starting processor thread index.
             /// </summary>
@@ -336,10 +186,18 @@ namespace DotMpi
             /// <summary>
             /// Delegate function to provide arguments to each process.
             /// </summary>
-            protected Func<int, IArgListProvider> ArgProvider { get; set; } = null!;
+            protected Func<int, IArgProvider> ArgProvider { get; set; } = null!;
+
+            /// <summary>
+            /// Occurs when a parallel process function result is returned.
+            /// </summary>
+            /// <typeparam name="TResult">The type of the function result.</typeparam>
+            /// <param name="sender">The <see cref="ParallelFunctionRunner{TResult}{TResult}"/> that raised the event.</param>
+            /// <param name="e">A <see cref="FunctionResultEventArgs{TResult}"/> that contains the event data including the process thread index, process ID, pipe name, result TValue, and serialized result.</param>
+            public event EventHandler<FunctionResultEventArgs<TResult>> FunctionResultReturned;
 
 
-            protected abstract void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider);
+            protected abstract void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider);
 
 
             /// <summary>
@@ -354,13 +212,9 @@ namespace DotMpi
                 {
                     throw new ArgumentException("Start must less than end", nameof(toExclusive));
                 }
-                else if (fromInclusive < 0)
+                else if (fromInclusive < 0)// previous check ensures to exclusive is positve and >0 if from =>0
                 {
                     throw new ArgumentException("Start must be greater than zero", nameof(fromInclusive));
-                }
-                else if (toExclusive < 0)
-                {
-                    throw new ArgumentException("End must be greater than zero", nameof(toExclusive));
                 }
                 Start = fromInclusive;
                 End = toExclusive;
@@ -409,7 +263,7 @@ namespace DotMpi
             /// <param name="argProvider">Delegate function to provide arguments to each process.</param>
             /// <returns></returns>
             /// <exception cref="Exception"></exception>
-            protected internal ParallelFunctionRunner<TResult> Run(Func<int, IArgListProvider> argProvider)
+            protected internal ParallelFunctionRunner<TResult> Run(Func<int, IArgProvider> argProvider)
             {
                 if (IsRunning)
                 {
@@ -469,12 +323,13 @@ namespace DotMpi
                         {
                             if (!p.HasExited)
                             {
-                                var args = argProvider(threadIndex).ToArray();
+                                var provider = argProvider(threadIndex);
+                                var args = provider.ToArray();
                                 if (Logger.InfoEnabled)
                                     Logger.Info($"[{DateTime.Now}] {id} Executing {nameof(Run)}(pipeServer, {pipeName}, {threadIndex}, args: {string.Join(",", args)})");
 
                                 RunThread(pipeServer, pipeName, threadIndex, argProvider);
-                                ReadResults(threadIndex, p, pipeName, pipeServer);
+                                ReadResults(threadIndex, p, pipeName, pipeServer, provider);
                                 p.WaitForExit();
                             }
 
@@ -559,7 +414,7 @@ namespace DotMpi
             /// <param name="p"></param>
             /// <param name="pipeName"></param>
             /// <param name="pipeServer"></param>
-            private void ReadResults(int index, Process p, string pipeName, NamedPipeServerStream pipeServer)
+            private void ReadResults(int index, Process p, string pipeName, NamedPipeServerStream pipeServer, IArgProvider provider)
             {
                 try
                 {
@@ -580,8 +435,9 @@ namespace DotMpi
                         throw new Exception(errorMessage);
                     }
 #pragma warning disable CS8601 // Possible null reference assignment.
-                    Results[index] = result.TValue;
+                    Results[index] = result.Result;
 #pragma warning restore CS8601 // Possible null reference assignment.
+                    FunctionResultReturned?.Invoke(this, new FunctionResultEventArgs<TResult>(index, p.Id, pipeName, provider, result));
 
                     if (Logger.DebugEnabled)
                         Logger.Debug($"[{DateTime.Now}] {id} Read result from client {index} {pipeName} - {json}");
@@ -606,13 +462,6 @@ namespace DotMpi
 
         }
 
-
-        public interface IParallelFunc
-        {
-            void Run(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, params object[] args);
-        }
-
-
         public class ParallelFunction<TResult> : ParallelFunctionRunner<TResult>
         {
             /// <summary>
@@ -631,7 +480,7 @@ namespace DotMpi
             public Func<TResult> Target { get; }
 
 
-            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgListProvider> argProvider)
+            protected override void RunThread(NamedPipeServerStream pipeServer, string pipeName, int threadIndex, Func<int, IArgProvider> argProvider)
             {
                 var args = argProvider(threadIndex).ToArray();
 
@@ -679,16 +528,22 @@ namespace DotMpi
 
 
 
+        /// <summary>
+        /// Multi processor parallel runner
+        /// </summary>
+        /// <param name="fromInclusive">The start index, inclusive.</param>
+        /// <param name="toExclusive">The end index, exclusive.</param>
+        /// <exception cref="ArgumentException"></exception>
         //special case for only one generic argument
         public static ParallelFunction<T0, TResult>
             ParallelFor<T0, TResult>(
-                int start,
-                int end,
+                int fromInclusive,
+                int toExclusive,
                 Func<T0, TResult> target,
                 Func<int, T0> argProvider
             )
         {
-            var builder = new ParallelFunctionBuilder(start, end)
+            var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
                 .For(target).WithArgs(argProvider);
             return builder;
         }
@@ -778,9 +633,12 @@ namespace DotMpi
     {
         private static string _id = "unknown";
         public static string id { get => $"[{_id}]"; set => _id = value; }
+        static Logger Logger = Logger.Instance;
 
         public static RemoteCallData GetRemoteCallData(MethodInfo method, params object[] args)
         {
+        
+
             SerializableMethodInfo methodInfo = null!;
             if (method.IsStatic == false)
             {
@@ -903,7 +761,7 @@ namespace DotMpi
             var m = asm.ManifestModule.ResolveMethod(callData.MethodInfo.MetaDataToken);
             if (m == null)
                 throw new Exception($"Failed to resolve method for MetaDataToken: {callData.MethodInfo.MetaDataToken}");
-            var args = callData.ArgInfo.Select(x => x.Value).ToArray();
+            var args = callData.ArgInfo.Select(x => x.ObjectValue).ToArray();
             var t = m.DeclaringType;
 
 

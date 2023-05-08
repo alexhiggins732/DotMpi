@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static DotMpi.Mpi;
 
 namespace DotMpi.MpiTests
 {
@@ -34,7 +35,7 @@ namespace DotMpi.MpiTests
 	    {#>
 
         [TestMethod()]
-        public void ForTest<#=i.ToString().PadLeft(2, '0')#>()
+        public void ParallelForTest_1_<#=i.ToString().PadLeft(2, '0')#>()
         {
             Func<<#	for(var j=0; j<=i;j++){#>int<#if(j<i){#>, <#}#><#}#>, string> target = For;
 
@@ -49,10 +50,49 @@ namespace DotMpi.MpiTests
                 Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
 
             }
+        }
+        <#}#>
+
+        <#
+	    for(var i=0; i<16;i++)
+	    {#>
+
+        [TestMethod]
+        public void ParallelForTest_2_<#=i.ToString().PadLeft(2, '0')#>()
+        {
+            Func<<#	for(var j=0; j<=i;j++){#>int<#if(j<i){#>, <#}#><#}#>, string> target = For;
+
+            var func = Mpi
+                .ParallelFor(0, numThreads, target, <#	for(var j=0; j<=i;j++){#><#=j#><#if(j<i){#>, <#}#><#}#>);
+           
+           func.FunctionResultReturned += (sender, e) =>
+            {
+                var thread = e.ThreadIndex;
+                var result = e.Result;
+                Assert.IsTrue(result != null);
+                Assert.IsTrue(result.StartsWith($"Thread {thread}"), result);
+
+                var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                var expectedArgs = new[] { <#	for(var j=0; j<=i;j++){#><#=j#><#if(j<i){#>, <#}#><#}#> };
+                Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+                var argList =(ArgList<<#	for(var j=0; j<=i;j++){#>int<#if(j<i){#>, <#}#><#}#>>)e.ArgProvider;
+                object[] argListArray = argList;
+                var argListTypedArray = argListArray.Select(x => (int)x);
+                Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                    $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                );
+
+       
+
+            };
+            func.Run().
+                 Wait();    
 
         }
-    <#}#>
-
+        <#}#>
 
     }
 

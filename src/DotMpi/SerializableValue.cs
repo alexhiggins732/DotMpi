@@ -21,7 +21,7 @@ namespace DotMpi
     public class SerializableValue : SerializableTypeInfo
     {
 
-        public object? Value { get; set; } = null!;
+        public object? ObjectValue { get; set; } = null!;
 
         public SerializableValue()
         {
@@ -41,7 +41,7 @@ namespace DotMpi
             }
             AssemblyName = type.Assembly.FullName;
             TypeName = type.FullName;
-            Value = value;
+            ObjectValue = value;
         }
 
         internal string ToJson() => JsonConvert.SerializeObject(this);

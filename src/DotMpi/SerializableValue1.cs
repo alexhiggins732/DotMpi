@@ -19,7 +19,7 @@ namespace DotMpi
 
     public class SerializableValue<TResult> : SerializableValue
     {
-        public TResult? TValue => (TResult?)Value;
+        public TResult? Result => (TResult?)ObjectValue;
         public SerializableValue() { }
         public SerializableValue(TResult? value)
             : base()
@@ -35,7 +35,7 @@ namespace DotMpi
             }
             AssemblyName = type.Assembly.FullName;
             TypeName = type.FullName;
-            Value = value;
+            ObjectValue = value;
         }
 
     }

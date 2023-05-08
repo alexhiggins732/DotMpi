@@ -80,7 +80,7 @@ namespace DotMpi
             writer.WritePropertyName("TypeName");
             writer.WriteValue(argInfo.TypeName);
             writer.WritePropertyName("Value");
-            serializer.Serialize(writer, argInfo.Value);
+            serializer.Serialize(writer, argInfo.ObjectValue);
             writer.WriteEndObject();
         }
     }

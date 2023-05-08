@@ -48,7 +48,7 @@ namespace DotMpi
             var debugData = (new[] { this })
                    .Select(x => new
                    {
-                       Args = string.Join(", ", x.ArgInfo.Select(x => x.Value)),
+                       Args = string.Join(", ", x.ArgInfo.Select(x => x.ObjectValue)),
                        ReturnType = x.ReturnInfo.TypeName,
                        Method = x.MethodInfo.TypeName,
 

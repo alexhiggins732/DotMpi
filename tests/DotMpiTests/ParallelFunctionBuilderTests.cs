@@ -13,13 +13,8 @@
 */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Versioning;
 
 namespace DotMpi.MpiTests
@@ -27,11 +22,13 @@ namespace DotMpi.MpiTests
     [TestClass()]
     public partial class ParallelFunctionBuilderTests
     {
-
+    
+        // For code coverage do not short circuit with || operator. Use | to evaluate both.
         [SupportedOSPlatformGuard("windows")]  // The platform guard attributes used
         [SupportedOSPlatformGuard("linux")]
-        private static readonly bool _isWindowsOrLinux = OperatingSystem.IsWindows() || OperatingSystem.IsLinux();
+        private static readonly bool _isWindowsOrLinux = OperatingSystem.IsLinux() | OperatingSystem.IsWindows();
 
+        [ExcludeFromCodeCoverage]
         public static int GetCpuId()
         {
             if (_isWindowsOrLinux)
@@ -48,113 +45,60 @@ namespace DotMpi.MpiTests
         }
 
         private static int? cpu;
+        [ExcludeFromCodeCoverage]
         private static int Cpu => cpu.HasValue ? cpu.Value : (cpu = GetCpuId()).Value;
         private static Process CurrentProcess => Process.GetCurrentProcess();
         private static int ProcessId => CurrentProcess.Id;
 
-        public static string MpiHelloWorld(int threadIndex, string message)
-        {;
+
+        public static string MpiHelloWorld1(int threadIndex, string message)
+        {
+            ;
             return @$"{message} from thread {threadIndex} on process {ProcessId} on cpu {Cpu}";
         }
 
         const int numThreads = 2;
 
-
-        [TestMethod()]
-        public void ForTest16()
+        [TestMethod]
+        public void TestIsSupported()
         {
-            //Assert.Fail();
-            //var a = 1.ToString().PadLeft(2, '0')
+            Assert.IsTrue(_isWindowsOrLinux, "Only windows and linux support setting CPU affinity. Mileage may vary on other OSes such as IOS");
         }
 
-        [TestMethod()]
-        public void ForTest17()
+        [TestMethod]
+        public void MpiHelloWorld()
         {
-            //Assert.Fail();
+            Func<int, string, string> target = MpiHelloWorld1;
+            var fn = Mpi.ParallelFor(1, target, i => new(i, "Hello World"));
+            var result = fn.Run().Wait();
+            Assert.IsTrue(result.Results.Single().StartsWith("Hello World"));
         }
 
-        [TestMethod()]
-        public void ForTest18()
+        [TestMethod]
+        public void MpiHelloWorldFailsWhenStartNotGreaterThanEnd()
         {
-            //Assert.Fail();
+            Func<int, string, string> target = MpiHelloWorld1;
+
+            var runner = Mpi.Parallel(0, 0);
+            Assert.ThrowsException<ArgumentException>(() => runner.For(target));
         }
 
-        [TestMethod()]
-        public void ForTest19()
+        [TestMethod]
+        public void MpiHelloWorldFailsWhenStartNegative()
         {
-            //Assert.Fail();
+            Func<int, string, string> target = MpiHelloWorld1;
+
+            var runner = Mpi.Parallel(-1, 1);
+            Assert.ThrowsException<ArgumentException>(() => runner.For(target));
         }
 
-        [TestMethod()]
-        public void ForTest20()
+        [TestMethod]
+        public void MpiHelloWorldFailsWhenEndNegative()
         {
-            //Assert.Fail();
-        }
+            Func<int, string, string> target = MpiHelloWorld1;
 
-        [TestMethod()]
-        public void ForTest21()
-        {
-            //Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ForTest22()
-        {
-            //Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ForTest23()
-        {
-            //Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ForTest24()
-        {
-            //Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ForTest25()
-        {
-            //Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ForTest26()
-        {
-            //Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ForTest27()
-        {
-            //Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ForTest28()
-        {
-            //Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ForTest29()
-        {
-            //Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ForTest30()
-        {
-            //Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ForTest31()
-        {
-            //Assert.Fail();
+            var runner = Mpi.Parallel(-2, -1);
+            Assert.ThrowsException<ArgumentException>(() => runner.For(target));
         }
     }
 }
