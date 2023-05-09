@@ -1,0 +1,156 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".generated.cs" #>
+/*
+ Copyright (c) 2023 HigginsSoft
+ Written by Alexander Higgins https://github.com/alexhiggins732/ 
+ 
+ Source code for this software can be found at https://github.com/alexhiggins732/DotMpi
+ 
+ This software is licensce under GNU General Public License version 3 as described in the LICENSE
+ file at https://github.com/alexhiggins732/DotMpi/LICENSE
+ 
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+*/
+
+namespace DotMpi
+{
+    public partial class Mpi
+    {
+
+    <#
+	    for(var i=0; i<16;i++)
+	    {#>
+
+        // from, to, target, func<int, arglist>
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="fromInclusive">The start index, inclusive.</param>
+        /// <param name="toExclusive">The end index, exclusive.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
+            ParallelFor<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>(
+                int fromInclusive,
+                int toExclusive,
+                Func<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult> target,
+                Func<int, ArgList<<#	for(var j=0; j<=i;j++){#>T<#=j#><#if(j<i){#>, <#}#><#}#>>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        // from, to, target, args
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="fromInclusive">The start index, inclusive.</param>
+        /// <param name="toExclusive">The end index, exclusive.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
+            ParallelFor<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>(
+                int fromInclusive,
+                int toExclusive,
+                Func<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult> target,
+                <#	for(var j=0; j<=i;j++){#>T<#=j#> arg<#=j#><#if(j<i){#>, <#}#><#}#>
+            
+            )
+        {
+            var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
+                .For(target).WithArgs(<#	for(var j=0; j<=i;j++){#>arg<#=j#><#if(j<i){#>, <#}#><#}#>);
+            return builder;
+        }
+
+        // from, to, target
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="fromInclusive">The start index, inclusive.</param>
+        /// <param name="toExclusive">The end index, exclusive.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
+            ParallelFor<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>(
+                int fromInclusive,
+                int toExclusive,
+                Func<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult> target
+            )
+        {
+            var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
+                .For(target);
+            return builder;
+        }
+
+        // numthreads, target, func<int, arglist>
+        /// <summary>
+        /// Multi processor parallel runner, accepting an argument provider
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
+            ParallelFor<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>(
+                int numThreads,
+                Func<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult> target,
+                Func<int, ArgList<<#	for(var j=0; j<=i;j++){#>T<#=j#><#if(j<i){#>, <#}#><#}#>>> argProvider
+            )
+        {
+            var builder = new ParallelFunctionBuilder(0, numThreads)
+                .For(target, argProvider);
+            return builder;
+        }
+
+        //numthreads, target, args
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
+            ParallelFor<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>(
+                int numThreads,
+                Func<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult> target,
+                <#	for(var j=0; j<=i;j++){#>T<#=j#> arg<#=j#><#if(j<i){#>, <#}#><#}#>
+            
+            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target).WithArgs(<#	for(var j=0; j<=i;j++){#>arg<#=j#><#if(j<i){#>, <#}#><#}#>);
+                return builder;
+            }
+
+
+        //numThreads, target
+        /// <summary>
+        /// Multi processor parallel runner, accepting an strongly typed generic arguments
+        /// </summary>
+        /// <param name="numThreads">The number of threads to launch.</param>
+        /// <param name="target">The target method to execute on the external processor.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static ParallelFunction<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
+            ParallelFor<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>(
+                int numThreads,
+                Func<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult> target
+            )
+            {
+                var builder = new ParallelFunctionBuilder(numThreads)
+                    .For(target);
+                return builder;
+            }
+
+        <#}#>
+
+    }
+}

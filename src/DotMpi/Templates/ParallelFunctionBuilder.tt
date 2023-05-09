@@ -1,0 +1,75 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+/*
+ Copyright (c) 2023 HigginsSoft
+ Written by Alexander Higgins https://github.com/alexhiggins732/ 
+ 
+ Source code for this software can be found at https://github.com/alexhiggins732/DotMpi
+ 
+ This software is licensce under GNU General Public License version 3 as described in the LICENSE
+ file at https://github.com/alexhiggins732/DotMpi/LICENSE
+ 
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+*/
+
+using System.IO.Pipes;
+using System.Text;
+using System.Diagnostics;
+
+namespace DotMpi
+{
+    public partial class Mpi
+    {
+
+        public partial class ParallelFunctionBuilder
+        {
+<#
+	    for(var i=0; i<16;i++)
+	    {#>
+
+            /// <summary>
+            /// Multi processor parallel runner, accepting an argument provider
+            /// </summary>
+            /// <param name="target">The target method to execute on the external processor.</param>
+            /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+            public ParallelFunction
+                <<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
+                For<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
+                (
+                    Func<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult> target
+                )
+                {
+                    var runner = new ParallelFunction<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
+                        (Start, End, target);
+                    return runner;                
+                }
+
+            /// <summary>
+            /// Multi processor parallel runner, accepting an argument provider
+            /// </summary>
+            /// <param name="target">The target method to execute on the external processor.</param>
+            /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+            public ParallelFunction
+                <<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
+                For<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
+                (
+                    Func<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult> target,
+                    Func<int, ArgList<<#	for(var j=0; j<=i;j++){#>T<#=j#><#if(j<i){#>, <#}#><#}#>>> argProvider
+                )
+                {
+                    var runner = new ParallelFunction<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
+                        (Start, End, target);
+
+                    return runner.WithArgs(argProvider);                
+                }
+
+        <#}#>
+
+        }
+    }
+}

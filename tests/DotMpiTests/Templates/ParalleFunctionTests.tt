@@ -1,0 +1,98 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".generated.cs" #>
+/*
+ Copyright (c) 2023 HigginsSoft
+ Written by Alexander Higgins https://github.com/alexhiggins732/ 
+ 
+ Source code for this software can be found at https://github.com/alexhiggins732/DotMpi
+ 
+ This software is licensce under GNU General Public License version 3 as described in the LICENSE
+ file at https://github.com/alexhiggins732/DotMpi/LICENSE
+ 
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+*/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DotMpi.MpiTests
+{
+    public partial class MpiTests
+    {
+        public partial class ParallelFunctionTests
+        {
+        
+        <#
+	        for(var i=0; i<16;i++)
+	        {#>
+
+            [TestMethod()]
+            public void ParallelFunction_ForTest_1_<#=i.ToString().PadLeft(2, '0')#>()
+            {
+                Func<<#	for(var j=0; j<=i;j++){#>int<#if(j<i){#>, <#}#><#}#>, string> target = For;
+
+                var func = Mpi
+                    .ParallelFor(numThreads, target, i => new(<#	for(var j=0; j<=i;j++){if(j==0){#>i<#}else{#>0<#}#><#if(j<i){#>, <#}#><#}#>));
+
+                Assert.AreEqual(target.Method.MetadataToken, func.Target.Method.MetadataToken);
+                Assert.AreEqual(0, func.Start);
+                Assert.AreEqual(numThreads, func.End);
+            }
+
+            [TestMethod]
+            public void ParallelFunction_ForTest_2_<#=i.ToString().PadLeft(2, '0')#>()
+            {
+                Func<<#	for(var j=0; j<=i;j++){#>int<#if(j<i){#>, <#}#><#}#>, string> target = For;
+
+                var func = Mpi
+                    .ParallelFor(0, numThreads, target, <#	for(var j=0; j<=i;j++){#><#=j#><#if(j<i){#>, <#}#><#}#>);
+
+                Assert.AreEqual(target.Method.MetadataToken, func.Target.Method.MetadataToken);
+                Assert.AreEqual(0, func.Start);
+                Assert.AreEqual(numThreads, func.End);
+            }
+
+            [TestMethod()]
+            public void ParallelFunction_ForTest_3_<#=i.ToString().PadLeft(2, '0')#>()
+            {
+                Func<<#	for(var j=0; j<=i;j++){#>int<#if(j<i){#>, <#}#><#}#>, string> target = For;
+
+                var func = Mpi
+                    .ParallelFor(numThreads, target)
+                    .WithArgs(i => new(<#	for(var j=0; j<=i;j++){if(j==0){#>i<#}else{#>0<#}#><#if(j<i){#>, <#}#><#}#>));
+
+                Assert.AreEqual(target.Method.MetadataToken, func.Target.Method.MetadataToken);
+                Assert.AreEqual(0, func.Start);
+                Assert.AreEqual(numThreads, func.End);
+            }
+
+            [TestMethod]
+            public void ParallelFunction_ForTest_4_<#=i.ToString().PadLeft(2, '0')#>()
+            {
+                Func<<#	for(var j=0; j<=i;j++){#>int<#if(j<i){#>, <#}#><#}#>, string> target = For;
+
+                var func = Mpi
+                    .ParallelFor(0, numThreads, target)
+                    .WithArgs(<#	for(var j=0; j<=i;j++){#><#=j#><#if(j<i){#>, <#}#><#}#>);
+
+                Assert.AreEqual(target.Method.MetadataToken, func.Target.Method.MetadataToken);
+                Assert.AreEqual(0, func.Start);
+                Assert.AreEqual(numThreads, func.End);
+            }
+
+            <#}#>
+
+        }
+    }
+}

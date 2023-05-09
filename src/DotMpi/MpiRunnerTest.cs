@@ -40,10 +40,8 @@ namespace DotMpi
         public static void TestHelloWorldExec(int numThreads)
         {
             Func<int, HelloWorldParallelResult> target = HelloWorld;
-            for (var i = 0; i < numThreads; i++)
-            {
-                var result = MpiRunner.Exec(target, i);
-            }
+            Mpi.ParallelFor(0, numThreads, target, i => i);
+
         }
 
         [SupportedOSPlatformGuard("windows")]  // The platform guard attributes used
@@ -105,10 +103,11 @@ namespace DotMpi
 
             var runner = para.For(target).WithArgs(HelloWorldArgProvider);
 
-            var controller = runner.WithArgs(HelloWorldArgProvider);
+            var func = runner.WithArgs(HelloWorldArgProvider);
 
-            controller = Mpi
-                .ParallelFor(0, numThreads, target, HelloWorldArgProvider);
+            var controller = Mpi
+                .ParallelFor(0, numThreads, target, HelloWorldArgProvider)
+                .Run();
 
             //var controller = runner.Run((Mpi.ArgProvider)((i) => new object[] { HelloWorldArgProvider(i) }));
 

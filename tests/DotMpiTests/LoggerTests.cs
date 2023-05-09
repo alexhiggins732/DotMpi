@@ -1,4 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/*
+ Copyright (c) 2023 HigginsSoft
+ Written by Alexander Higgins https://github.com/alexhiggins732/ 
+ 
+ Source code for this software can be found at https://github.com/alexhiggins732/DotMpi
+ 
+ This software is licensce under GNU General Public License version 3 as described in the LICENSE
+ file at https://github.com/alexhiggins732/DotMpi/LICENSE
+ 
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+*/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DotMpi;
 using System;
 using System.Collections.Generic;
@@ -7,12 +21,62 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions.Interfaces;
+using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 
 namespace DotMpi.Tests
 {
     [TestClass()]
     public class LoggerTests
     {
+        [TestMethod()]
+        public void InstanceLoggerTest()
+        {
+            var logger = Logger.Instance;
+            logger.DebugEnabled = false;
+            logger.InfoEnabled = false;
+            logger.ErrorEnabled = false;
+            logger.VerboseEnabled = false;
+
+
+            Assert.IsFalse(logger.DebugEnabled);
+            Assert.IsFalse(logger.InfoEnabled);
+            Assert.IsFalse(logger.ErrorEnabled);
+            Assert.IsFalse(logger.VerboseEnabled);
+
+            logger.DebugEnabled = true;
+            logger.InfoEnabled = true;
+            logger.ErrorEnabled = true;
+            logger.VerboseEnabled = true;
+
+            Assert.IsTrue(logger.DebugEnabled);
+            Assert.IsTrue(logger.InfoEnabled);
+            Assert.IsTrue(logger.ErrorEnabled);
+            Assert.IsTrue(logger.VerboseEnabled);
+
+
+            Logger.StaticDebugEnabled = false;
+            Logger.StaticInfoEnabled = false;
+            Logger.StaticErrorEnabled = false;
+            Logger.StaticVerboseEnabled = false;
+
+
+            Assert.IsFalse(logger.DebugEnabled);
+            Assert.IsFalse(logger.InfoEnabled);
+            Assert.IsFalse(logger.ErrorEnabled);
+            Assert.IsFalse(logger.VerboseEnabled);
+
+            Logger.StaticDebugEnabled = true;
+            Logger.StaticInfoEnabled = true;
+            Logger.StaticErrorEnabled = true;
+            Logger.StaticVerboseEnabled = true;
+
+            Assert.IsTrue(logger.DebugEnabled);
+            Assert.IsTrue(logger.InfoEnabled);
+            Assert.IsTrue(logger.ErrorEnabled);
+            Assert.IsTrue(logger.VerboseEnabled);
+
+        }
+
         [TestMethod()]
         public void LoggerTest()
         {

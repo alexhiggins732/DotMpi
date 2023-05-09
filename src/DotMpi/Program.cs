@@ -14,9 +14,10 @@
 
 using System.Diagnostics;
 using System.IO.Pipes;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-
+[assembly: InternalsVisibleTo("DotMpiTests")]
 namespace DotMpi
 {
     internal class Program
@@ -90,7 +91,7 @@ namespace DotMpi
                     Console.WriteLine($"[{DateTime.Now}] {id} Launching mpi runner: {string.Join(",", args)}");
                     SetProcessor(clientIndex);
                     Mpi.PipeName = pipeName;
-                    Mpi.RunThread(clientIndex, pipeName);
+                    Mpi.FunctionExecutor.RunThread(clientIndex, pipeName);
                     return;
                 }
                 else

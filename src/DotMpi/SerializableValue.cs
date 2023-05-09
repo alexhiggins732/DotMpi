@@ -31,16 +31,12 @@ namespace DotMpi
             : base()
         {
             var type = value?.GetType() ?? typeof(object);
-            if (type is null || type.FullName is null)
-            {
-                throw new Exception("Type must have a full name");
-            }
-            if (type.Assembly is null || type.Assembly.FullName is null)
-            {
-                throw new Exception("Type must have an assembly resolvable with a full name");
-            }
+
+            //type will always have an assembly with a name
+#pragma warning disable CS8601 // Possible null reference assignment.
             AssemblyName = type.Assembly.FullName;
             TypeName = type.FullName;
+#pragma warning restore CS8601 // Possible null reference assignment.
             ObjectValue = value;
         }
 

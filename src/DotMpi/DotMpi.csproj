@@ -21,7 +21,7 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 	</ItemGroup>
 	<PropertyGroup>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -55,17 +55,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="ArgList.tt">
-			<LastGenOutput>ArgList.cs</LastGenOutput>
+		<None Update="Templates\ArgList.tt">
+			<LastGenOutput>ArgList.generated.cs</LastGenOutput>
 			<Generator>TextTemplatingFileGenerator</Generator>
 		</None>
-		<None Update="ParallelRunners.tt">
-			<LastGenOutput>ParallelRunners.cs</LastGenOutput>
-			<Generator>TextTemplatingFileGenerator</Generator>
+		<None Update="Templates\ParalleFor.tt">
+		  <Generator>TextTemplatingFileGenerator</Generator>
+		  <LastGenOutput>ParalleFor.generated.cs</LastGenOutput>
 		</None>
-		<None Update="MpiRunnerOverloads.tt">
+		<None Update="Templates\ParallelFunction.tt">
+		  <Generator>TextTemplatingFileGenerator</Generator>
+		  <LastGenOutput>ParallelFunction.generated.cs</LastGenOutput>
+		</None>
+		<None Update="Templates\ParallelFunctionBuilder.tt">
+			<LastGenOutput>ParallelFunctionBuilder.cs</LastGenOutput>
 			<Generator>TextTemplatingFileGenerator</Generator>
-			<LastGenOutput>MpiRunnerOverloads.cs</LastGenOutput>
 		</None>
 	</ItemGroup>
 
@@ -74,20 +78,25 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="MpiRunnerOverloads.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>MpiRunnerOverloads.tt</DependentUpon>
-		</Compile>
-		<Compile Update="ArgList.cs">
+		<Compile Update="Templates\ArgList.generated.cs">
 			<DependentUpon>ArgList.tt</DependentUpon>
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 		</Compile>
-		<Compile Update="ParallelRunners.cs">
+		<Compile Update="Templates\ParalleFor.generated.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>ParalleFor.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\ParallelFunction.generated.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>ParallelFunction.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\ParallelFunctionBuilder.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
-			<DependentUpon>ParallelRunners.tt</DependentUpon>
+			<DependentUpon>ParallelFunctionBuilder.tt</DependentUpon>
 		</Compile>
 	</ItemGroup>
 	<Target Name="PrepareReleaseNotes" BeforeTargets="GenerateNuspec">

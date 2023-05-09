@@ -1,0 +1,70 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".generated.cs" #>
+/*
+ Copyright (c) 2023 HigginsSoft
+ Written by Alexander Higgins https://github.com/alexhiggins732/ 
+ 
+ Source code for this software can be found at https://github.com/alexhiggins732/DotMpi
+ 
+ This software is licensce under GNU General Public License version 3 as described in the LICENSE
+ file at https://github.com/alexhiggins732/DotMpi/LICENSE
+ 
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+*/
+
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Versioning;
+using static DotMpi.Mpi;
+
+
+namespace DotMpi.MpiTests
+{
+     public partial class MpiTests
+    {
+        public partial class ArgListTests
+        {
+            const int numThreads = 2;
+    <#
+       
+
+	        for(var i=0; i<16;i++)
+	        {#>
+
+                [TestMethod]
+                public void ArgList_TestCreate_<#=i.ToString().PadLeft(2, '0')#>()
+                {
+                    var argList = ArgList.Create(<#	for(var j=0; j<=i;j++){#><#=j#><#if(j<i){#>, <#}#><#}#>);
+                    <#	for(var j=0; j<=i;j++){#>Assert.AreEqual(<#=j#>, argList.Arg<#=j#>);
+                    <#}#>                    
+                }
+
+                [TestMethod]
+                public void ArgList_TestFuncReadCreate_<#=i.ToString().PadLeft(2, '0')#>()
+                {
+                    Func<<#	for(var j=0; j<=i;j++){#>int<#if(j<i){#>, <#}#><#}#>, string> target = For;
+                    var argList = ArgList.Create(<#	for(var j=0; j<=i;j++){#><#=j#><#if(j<i){#>, <#}#><#}#>);
+
+                    var fn= Mpi.ParallelFor(numThreads, target, (i) => argList);
+                    var fnArgProvider = fn.ArgProvider;
+                    var fnArgs = fnArgProvider(0);
+
+                    <#	for(var j=0; j<=i;j++){#>Assert.AreEqual(<#=j#>, fnArgs.Arg<#=j#>);
+                    <#}#>                    
+                }
+
+    <#
+            }
+    #>
+
+        }
+    }
+}

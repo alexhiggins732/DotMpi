@@ -25,31 +25,19 @@ namespace DotMpi
         public SerializableMethodInfo() { }
         public SerializableMethodInfo(MethodBase method)
         {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
             var declaringType = method.DeclaringType;
-            if (declaringType is null
-                || declaringType.FullName is null)
-            {
-                throw new Exception("Method must have an declaring type with resolvable with a full name");
-            }
-            var assembly = declaringType.Assembly;
-            if (assembly is null
-            || assembly.FullName is null)
-            {
-                throw new Exception("Method declaring type must have assembly resovable with a full name");
-            }
-            var methodType = method.GetType();
-            if (methodType is null
-                || methodType.FullName is null)
-            {
-                throw new Exception("Method must have type must have assembly resovable with a full name");
-            }
 
+            // A method will always have declaring type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var assembly = declaringType.Assembly;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            var methodType = method.GetType();
             var methodTypeAssembly = methodType.Assembly;
-            if (methodTypeAssembly is null
-                || methodTypeAssembly.FullName is null)
-            {
-                throw new Exception("Method Assembly must have type must have assembly resovable with a full name");
-            }
+
 
             TypeName = declaringType.FullName;
             AssemblyName = assembly.FullName;

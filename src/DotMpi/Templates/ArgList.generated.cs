@@ -1,4 +1,18 @@
-﻿using System.IO.Pipes;
+﻿/*
+ Copyright (c) 2023 HigginsSoft
+ Written by Alexander Higgins https://github.com/alexhiggins732/ 
+ 
+ Source code for this software can be found at https://github.com/alexhiggins732/DotMpi
+ 
+ This software is licensce under GNU General Public License version 3 as described in the LICENSE
+ file at https://github.com/alexhiggins732/DotMpi/LICENSE
+ 
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+*/
+
+using System.IO.Pipes;
 using System.Text;
 
 
@@ -8,15 +22,12 @@ namespace DotMpi
 
     public partial class Mpi
     {
+
 #pragma warning disable CS8601 // Possible null reference assignment.
 #pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         
-        public interface IArgProvider
-        {
-            object[] ToArray();
-        }
-        
+
         public partial class ArgList
         {
   

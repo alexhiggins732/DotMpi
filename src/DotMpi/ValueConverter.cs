@@ -31,17 +31,17 @@ namespace DotMpi
             var assemblyToken = jsonObject["AssemblyName"];
             if (assemblyToken is null)
             {
-                throw new Exception("AssemblyName not set");
+                throw new ArgumentException("AssemblyName not set");
             }
             var typeToken = jsonObject["TypeName"];
             if (typeToken is null)
             {
-                throw new Exception("TypeName not set");
+                throw new ArgumentException("TypeName not set");
             }
             var valueToken = jsonObject["Value"];
             if (valueToken is null)
             {
-                throw new Exception("Value not set");
+                throw new ArgumentException("Value not set");
             }
             string assemblyName = assemblyToken.ToString();
             string typeName = typeToken.ToString();
@@ -49,41 +49,45 @@ namespace DotMpi
             var type = asm.GetType(typeName);
             if (type is null)
             {
-                throw new Exception($"Failed to resolve type '{typeName}, {assemblyName}'");
+                throw new TypeLoadException($"Failed to resolve type '{typeName}, {assemblyName}'");
             }
 
             JToken value = valueToken;
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8602 // Converting null literal or possible null value to non-nullable type.
             object valueObject = value.ToObject(type);
+
             if (objectType.IsGenericType)
             {
                 var t = typeof(SerializableValue<>).MakeGenericType(type);
-                ConstructorInfo? constructor = t.GetConstructor(new Type[] { type });
-                object? serializableValue = constructor?.Invoke(new object[] { valueObject }); // creates a SerializableValue<int> with value 42
+                ConstructorInfo constructor = t.GetConstructor(new Type[] { type });
+                object serializableValue = constructor.Invoke(new object[] { valueObject }); // creates a SerializableValue<int> with value 
                 return serializableValue;
             }
             else
             {
                 return new SerializableValue(valueObject);
             }
-        
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning restore CS8602 // Converting null literal or possible null value to non-nullable type.
         }
 
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            if (value is null)
-                return;
-
-            var argInfo = (SerializableValue)value;
-            writer.WriteStartObject();
-            writer.WritePropertyName("AssemblyName");
-            writer.WriteValue(argInfo.AssemblyName);
-            writer.WritePropertyName("TypeName");
-            writer.WriteValue(argInfo.TypeName);
-            writer.WritePropertyName("Value");
-            serializer.Serialize(writer, argInfo.ObjectValue);
-            writer.WriteEndObject();
+            if (value is not null)
+            {
+                var argInfo = (SerializableValue)value;
+                writer.WriteStartObject();
+                writer.WritePropertyName("AssemblyName");
+                writer.WriteValue(argInfo.AssemblyName);
+                writer.WritePropertyName("TypeName");
+                writer.WriteValue(argInfo.TypeName);
+                writer.WritePropertyName("Value");
+                serializer.Serialize(writer, argInfo.ObjectValue);
+                writer.WriteEndObject();
+            }
         }
     }
 
-  
+
 }

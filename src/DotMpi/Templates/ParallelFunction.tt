@@ -1,0 +1,113 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".generated.cs" #>
+/*
+ Copyright (c) 2023 HigginsSoft
+ Written by Alexander Higgins https://github.com/alexhiggins732/ 
+ 
+ Source code for this software can be found at https://github.com/alexhiggins732/DotMpi
+ 
+ This software is licensce under GNU General Public License version 3 as described in the LICENSE
+ file at https://github.com/alexhiggins732/DotMpi/LICENSE
+ 
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+*/
+
+using System.Diagnostics;
+using System.IO.Pipes;
+
+namespace DotMpi
+{
+    public partial class Mpi
+    {
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+<#
+	    for(var i=0; i<16;i++)
+	    {#>
+
+        /// <summary>
+        /// Multi processor parallel runner
+        /// </summary>
+        public class ParallelFunction<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult> 
+            : ParallelFunction<TResult>
+        {
+            /// <summary>
+            /// Multi processor parallel runner
+            /// </summary>
+            /// <param name="fromInclusive">The start index, inclusive.</param>
+            /// <param name="toExclusive">The end index, exclusive.</param>
+            /// <exception cref="ArgumentException"></exception>
+            public ParallelFunction(
+                int fromInclusive,
+                int toExclusive,
+                Func<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult> target
+                )
+                : base(fromInclusive, toExclusive)
+            {
+                this.Target = target;
+            }
+
+
+            public new Func<int, ArgList<<#	for(var j=0; j<=i;j++){#>T<#=j#><#if(j<i){#>, <#}#><#}#>>> ArgProvider
+            {
+                get => (Func<int, ArgList<<#	for(var j=0; j<=i;j++){#>T<#=j#><#if(j<i){#>, <#}#><#}#>>>)base.ArgProvider;
+                private set => base.ArgProvider = value;
+            }
+
+            public Func<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult> Target 
+            { 
+                get => (Func<<#	for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>)base.Delegate;
+                private set => base.Delegate = value;
+            }
+
+            <#if(i==0){#>
+
+            /// <summary>
+            /// Registers a delegate function to provide arguments for each process.
+            /// </summary>
+            /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+            /// <returns></returns>
+            public ParallelFunction<<#for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult> 
+                WithArgs(Func<int, T0> value)
+                => WithArgs(i => value(i));
+            <#}#>
+
+            /// <summary>
+            /// Registers a strongly typed generic arguments to provide to each process
+            /// </summary>
+            /// <returns></returns>
+            public ParallelFunction<<#for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult> 
+                WithArgs(<#	for(var j=0; j<=i;j++){#>T<#=j#> arg<#=j#><#if(j<i){#>, <#}#><#}#>)
+                => WithArgs(i => new(<#	for(var j=0; j<=i;j++){#>arg<#=j#><#if(j<i){#>, <#}#><#}#>));
+          
+            /// <summary>
+            /// Registers a delegate function to provide arguments for each process.
+            /// </summary>
+            /// <param name="argProvider">Delegate function to provide arguments for each process.</param>
+            /// <returns></returns>
+            public ParallelFunction<<#for(var j=0; j<=i;j++){#>T<#=j#>, <#}#>TResult>
+                WithArgs(Func<int, ArgList<<#	for(var j=0; j<=i;j++){#>T<#=j#><#if(j<i){#>, <#}#><#}#>>> argProvider)
+            {
+                this.ArgProvider = argProvider;
+                return this;
+            }
+
+
+        }
+
+<#
+        }
+#>
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+ 
+    }
+}

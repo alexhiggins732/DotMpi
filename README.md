@@ -2,7 +2,7 @@
 
 ![Nuget](https://img.shields.io/nuget/v/HigginsSoft.DotMpi.svg?style=flat-square) ![Tests](https://github.com/alexhiggins732/DotMpi/actions/workflows/dotnet.yml/badge.svg)
 
-# Installation:
+# Installation
 
 DotMpi is available as [nuget package](https://www.nuget.org/packages/HigginsSoft.DotMpi/) can be installed using nuget:
 - Visual Studio Package Manager
@@ -14,7 +14,7 @@ DotMpi is available as [nuget package](https://www.nuget.org/packages/HigginsSof
 
 Instructions for other package managers are availabe on the nuget package page.
 
-# DESCRIPTION:
+# Introduction
 
 DotMpi is a DotNet library that aims to bring multiprocessor functionality inspired by Open MPI to the DotNet world. It was developed as a solution to the limitations of DotNet's built-in `Parallel.For` function, which often leads to a lack of performance due to thread starvation.
 
@@ -176,6 +176,80 @@ var runner = Mpi
     .Wait();
 
 ``` 
+
+### Events
+
+While the `Run()` and `Wait()` methods return a function runner that you can use to access the results of each process in an array you can
+also use an event handler to subscribe to method results and method invocation data.
+
+The events provides result and meta data about the process and arguments provided.
+
+To access the events api, you must call `Build()` seperately first. The `Run()` method internally calls build and calls the the parallel
+function runner's run method.
+
+``` csharp
+Func<int, string, string> target = HelloWorld;
+
+var runner = Mpi
+    .ParallelFor(0, numThreads, target, i => CustomArgProvider.GetCustomArgs);
+    .Build();
+
+runner.FunctionInvoked += (sender, e) =>
+        {
+            //the thread index
+            var thread = e.ThreadIndex;
+
+            // the args provider use to send args to the function
+            var args = e.ArgProvider.ToArray().Select(i => (int)i);
+            
+            /// the processId the function ran on
+            var processId= e.ProcessId;
+
+            // the pipe name used for the process that ran the function.
+            var pipeName = e.PipeName;
+
+            // the serialized function call data sent.
+            var functionData = e.FunctionCallData;
+        }
+
+runner.FunctionResultReturned += (sender, e) =>
+        {
+            //the thread index
+            var thread = e.ThreadIndex;
+
+            // the result
+            var result = e.Result;
+
+            // the args provider use to send args to the function
+            var args = e.ArgProvider.ToArray().Select(i => (int)i);
+            
+            /// the processId the function ran on
+            var processId= e.ProcessId;
+
+            // the pipe name used for the process that ran the function.
+            var pipeName = e.PipeName;
+
+        }
+
+runner.Run();
+``` 
+
+If you want to capture them for later use, you can save them to an array based on the thread index.
+
+If you only want access to the results of each function, use the `.Results` array from the function runner.
+
+``` csharp
+
+
+Func<int, string, string> target = HelloWorld;
+
+var invoked = new FunctionInvokedEventArgs<string>[numThreads];
+var returned = new FunctionResultEventArgs<string>[numThreads];
+
+func.FunctionInvoked += (sender, e) => invoked[e.ThreadIndex] = e;
+func.FunctionResultReturned += (sender, e) => => returned[e.ThreadIndex] = e;
+``` 
+
 
 ## Roadmap
 

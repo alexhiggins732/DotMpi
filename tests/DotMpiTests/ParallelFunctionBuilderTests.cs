@@ -19,10 +19,8 @@ using System.Runtime.Versioning;
 
 namespace DotMpi.MpiTests
 {
-    [TestClass()]
-    public partial class ParallelFunctionBuilderTests
+    public partial class MpiTests
     {
-    
         // For code coverage do not short circuit with || operator. Use | to evaluate both.
         [SupportedOSPlatformGuard("windows")]  // The platform guard attributes used
         [SupportedOSPlatformGuard("linux")]
@@ -50,55 +48,68 @@ namespace DotMpi.MpiTests
         private static Process CurrentProcess => Process.GetCurrentProcess();
         private static int ProcessId => CurrentProcess.Id;
 
-
-        public static string MpiHelloWorld1(int threadIndex, string message)
-        {
-            ;
-            return @$"{message} from thread {threadIndex} on process {ProcessId} on cpu {Cpu}";
-        }
-
         const int numThreads = 2;
 
-        [TestMethod]
-        public void TestIsSupported()
+        [TestClass()]
+        public partial class ParallelFunctionBuilderTests
         {
-            Assert.IsTrue(_isWindowsOrLinux, "Only windows and linux support setting CPU affinity. Mileage may vary on other OSes such as IOS");
-        }
 
-        [TestMethod]
-        public void MpiHelloWorld()
-        {
-            Func<int, string, string> target = MpiHelloWorld1;
-            var fn = Mpi.ParallelFor(1, target, i => new(i, "Hello World"));
-            var result = fn.Run().Wait();
-            Assert.IsTrue(result.Results.Single().StartsWith("Hello World"));
-        }
+            public ParallelFunctionBuilderTests()
+            {
+                Logger.Instance.InfoEnabled = true;
 
-        [TestMethod]
-        public void MpiHelloWorldFailsWhenStartNotGreaterThanEnd()
-        {
-            Func<int, string, string> target = MpiHelloWorld1;
 
-            var runner = Mpi.Parallel(0, 0);
-            Assert.ThrowsException<ArgumentException>(() => runner.For(target));
-        }
+            }
 
-        [TestMethod]
-        public void MpiHelloWorldFailsWhenStartNegative()
-        {
-            Func<int, string, string> target = MpiHelloWorld1;
 
-            var runner = Mpi.Parallel(-1, 1);
-            Assert.ThrowsException<ArgumentException>(() => runner.For(target));
-        }
+            public static string MpiHelloWorld1(int threadIndex, string message)
+            {
+                ;
+                return @$"{message} from thread {threadIndex} on process {ProcessId} on cpu {Cpu}";
+            }
 
-        [TestMethod]
-        public void MpiHelloWorldFailsWhenEndNegative()
-        {
-            Func<int, string, string> target = MpiHelloWorld1;
 
-            var runner = Mpi.Parallel(-2, -1);
-            Assert.ThrowsException<ArgumentException>(() => runner.For(target));
+            [TestMethod]
+            public void TestIsSupported()
+            {
+                Assert.IsTrue(_isWindowsOrLinux, "Only windows and linux support setting CPU affinity. Mileage may vary on other OSes such as IOS");
+            }
+
+            [TestMethod]
+            public void MpiHelloWorld()
+            {
+                Func<int, string, string> target = MpiHelloWorld1;
+                var fn = Mpi.ParallelFor(1, target, i => new(i, "Hello World"));
+                var result = fn.Run().Wait();
+                Assert.IsTrue(result.Results.Single().StartsWith("Hello World"));
+            }
+
+            [TestMethod]
+            public void MpiHelloWorldFailsWhenStartNotGreaterThanEnd()
+            {
+                Func<int, string, string> target = MpiHelloWorld1;
+
+                var runner = Mpi.Parallel(0, 0);
+                Assert.ThrowsException<ArgumentException>(() => runner.For(target).Build());
+            }
+
+            [TestMethod]
+            public void MpiHelloWorldFailsWhenStartNegative()
+            {
+                Func<int, string, string> target = MpiHelloWorld1;
+
+                var runner = Mpi.Parallel(-1, 1);
+                Assert.ThrowsException<ArgumentException>(() => runner.For(target).Build());
+            }
+
+            [TestMethod]
+            public void MpiHelloWorldFailsWhenEndNegative()
+            {
+                Func<int, string, string> target = MpiHelloWorld1;
+
+                var runner = Mpi.Parallel(-2, -1);
+                Assert.ThrowsException<ArgumentException>(() => runner.For(target).Build());
+            }
         }
     }
 }

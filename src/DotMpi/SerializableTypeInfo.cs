@@ -24,18 +24,13 @@ namespace DotMpi
         }
         public SerializableTypeInfo(Type type)
         {
-            if (type.Assembly is null || type.Assembly.FullName is null)
-            {
-                throw new Exception("Type must have an assembly resolvable with a full name");
-            }
-            if (type is null || type.FullName is null)
-            {
-                throw new Exception("Type must have a full name");
-            }
-
+            if (type is null) throw new ArgumentNullException(nameof(type));
+            //Type wil have assembly and fullname
+#pragma warning disable CS8601 // Possible null reference assignment.
             AssemblyName = type.Assembly.FullName;
-
             TypeName = type.FullName;
+#pragma warning restore CS8601 // Possible null reference assignment.
+
         }
     }
 }

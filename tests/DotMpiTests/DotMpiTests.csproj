@@ -21,9 +21,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ParallelFunctionBuilderPartialTests.tt">
+    <None Update="Templates\ArgListTests.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ParallelFunctionBuilderPartialTests.cs</LastGenOutput>
+      <LastGenOutput>ArgListTests.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\ParalleForTests.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ParalleForTests.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\ParalleFunctionTests.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ParalleFunctionTests.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\ParallelFunctionBuilderTests.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ParallelFunctionBuilderTests.generated.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
@@ -32,10 +44,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ParallelFunctionBuilderPartialTests.cs">
+    <Compile Update="Templates\ArgListTests.generated.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ParallelFunctionBuilderPartialTests.tt</DependentUpon>
+      <DependentUpon>ArgListTests.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\ParalleForTests.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ParalleForTests.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\ParalleFunctionTests.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ParalleFunctionTests.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\ParallelFunctionBuilderTests.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ParallelFunctionBuilderTests.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 

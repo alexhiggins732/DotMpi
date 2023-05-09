@@ -66,7 +66,7 @@ namespace DotMpi
             var result = JsonConvert.DeserializeObject<RemoteCallData>(json);
             if (result is null)
             {
-                throw new Exception($"Failed to read {nameof(RemoteCallData)} from json:{json}");
+                throw new ArgumentException($"Failed to read {nameof(RemoteCallData)} from json:{json}");
             }
             return result;
         }

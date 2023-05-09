@@ -1,0 +1,168 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".generated.cs" #>
+/*
+ Copyright (c) 2023 HigginsSoft
+ Written by Alexander Higgins https://github.com/alexhiggins732/ 
+ 
+ Source code for this software can be found at https://github.com/alexhiggins732/DotMpi
+ 
+ This software is licensce under GNU General Public License version 3 as described in the LICENSE
+ file at https://github.com/alexhiggins732/DotMpi/LICENSE
+ 
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+*/
+
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static DotMpi.Mpi;
+using Newtonsoft.Json;
+
+namespace DotMpi.MpiTests
+{
+    public partial class MpiTests
+    {
+        <#
+	        for(var i=0; i<16;i++)
+	        {#>
+
+        public static string For(<#	for(var j=0; j<=i;j++){#>int arg<#=j#><#if(j<i){#>, <#}#><#}#>) 
+            => $"Thread {arg0} - Cpu {Cpu} - Process {ProcessId}: {nameof(For)}";
+        <#}#>
+
+        public partial class ParallelFunctionBuilderTests
+        {
+            <#
+	        for(var i=0; i<16;i++)
+	        {#>
+
+            //[TestMethod()]
+            public void ParallelForTest_1_<#=i.ToString().PadLeft(2, '0')#>()
+            {
+                Func<<#	for(var j=0; j<=i;j++){#>int<#if(j<i){#>, <#}#><#}#>, string> target = For;
+
+                var runner = Mpi
+                    .ParallelFor(0, numThreads, target, i => new(<#	for(var j=0; j<=i;j++){if(j==0){#>i<#}else{#>0<#}#><#if(j<i){#>, <#}#><#}#>))
+                    .Run().
+                     Wait();
+
+                for (var i = 0; i < numThreads; i++)
+                {
+                    var result = runner.Results[i];
+                    Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
+
+                }
+            }
+            <#}#>
+
+            <#
+	        for(var i=0; i<16;i++)
+	        {#>
+
+            [TestMethod]
+            public void ParallelForTest_2_<#=i.ToString().PadLeft(2, '0')#>()
+            {
+                Func<<#	for(var j=0; j<=i;j++){#>int<#if(j<i){#>, <#}#><#}#>, string> target = For;
+
+                var func = Mpi
+                    .ParallelFor(0, numThreads, target, i => new(<#	for(var j=0; j<=i;j++){if(j==0){#>i<#}else{#>0<#}#><#if(j<i){#>, <#}#><#}#>))
+                    .Build();
+           
+                var invoked = new FunctionInvokedEventArgs<string>[numThreads];
+                var results = new FunctionResultEventArgs<string>[numThreads];
+
+                func.FunctionInvoked += (sender, e) =>
+                {
+                    Assert.IsNotNull(e.FunctionCallData);
+
+                    var callData = e.FunctionCallData;
+                    
+                    var callDataBytes= (byte[])callData;
+                    var callDataFromBytes = (RemoteCallData)callDataBytes;
+
+                    var callDataJson = JsonConvert.SerializeObject(callData);
+                    var callDataFromBytesJson = JsonConvert.SerializeObject(callDataFromBytes);
+
+                    Assert.AreEqual(callDataJson, callDataFromBytesJson);
+                    Assert.AreNotEqual(0, e.ProcessId);
+                    Assert.IsNotNull(e.PipeName);
+                    Assert.IsTrue(e.ThreadIndex >= 0 && e.ThreadIndex < numThreads);
+                    Assert.IsNotNull(e.ArgProvider);
+                    invoked[e.ThreadIndex] = e;
+                };
+
+
+                func.FunctionResultReturned += (sender, e) =>
+                {
+                    var thread = e.ThreadIndex;
+                    var result = e.Result;
+                    Assert.IsTrue(result != null);
+                   
+
+                    var args = e.ArgProvider.ToArray().Select(i => (int)i);
+                    var expectedArgs = new[] { <#	for(var j=0; j<=i;j++){if(j==0){#>e.ThreadIndex<#}else{#>0<#}#><#if(j<i){#>, <#}#><#}#>};
+                    Assert.IsTrue(args.SequenceEqual(expectedArgs),
+                        $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                    );
+
+                    var argList =(ArgList<<#	for(var j=0; j<=i;j++){#>int<#if(j<i){#>, <#}#><#}#>>)e.ArgProvider;
+                    object[] argListArray = argList;
+                    var argListTypedArray = argListArray.Select(x => (int)x);
+                    Assert.IsTrue(argListTypedArray.SequenceEqual(expectedArgs),
+                        $"Args: {string.Join(", ", args)} Expected: {string.Join(", ", args)}"
+                    );
+
+                    Assert.AreNotEqual(0, e.ProcessId);
+                    Assert.IsNotNull(e.Result);
+                    Assert.IsNotNull(e.SerializedResult);
+                    Assert.IsTrue(e.ThreadIndex >= 0 && e.ThreadIndex < numThreads);
+                    results[e.ThreadIndex] = e;
+
+                };
+
+                <#if (i==0) {#>
+
+                var debugEnabled = MpiRunner.Logger.DebugEnabled;
+                MpiRunner.Logger.DebugEnabled = true;
+
+                <#}#>
+  
+                var runner = func.Run().Wait(TimeSpan.FromSeconds(10));    
+
+                <#if (i==0) {#>
+
+                MpiRunner.Logger.DebugEnabled = debugEnabled;
+
+                <#}#>
+
+                for(var i=0; i<numThreads; i++)
+                {
+                    Assert.AreEqual(invoked[i].PipeName, results[i].PipeName );
+                    Assert.AreEqual(invoked[i].ProcessId, results[i].ProcessId);
+                    Assert.AreEqual(invoked[i].ThreadIndex, results[i].ThreadIndex);
+
+                    var invokedArgs = invoked[i].ArgProvider.ToArray().Select(x => (int)i);
+                    var recievedArgs = results[i].ArgProvider.ToArray().Select(x => (int)i);
+                    Assert.IsTrue(invokedArgs.SequenceEqual(recievedArgs));
+
+                    var result = runner.Results[i];
+                    Assert.IsTrue(result.StartsWith($"Thread {i}"), result);
+                }
+            }
+            <#}#>
+
+        }
+    }
+}

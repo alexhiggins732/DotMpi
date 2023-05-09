@@ -19,15 +19,15 @@ namespace DotMpi
 {
     public class Logger
     {
-        static bool staticDebugEnabled;
+        static bool staticDebugEnabled = false;
         static bool staticVerboseEnabled = false;
         static bool staticErrorEnabled = true;
         static bool staticInfoEnabled = false;
 
-        public static bool StaticDebugEnabled { get => staticDebugEnabled; set => Instance.DebugEnabled = staticDebugEnabled = value; }
-        public static bool StaticVerboseEnabled { get => staticVerboseEnabled; set => Instance.verboseEnabled = staticVerboseEnabled = value; }
-        public static bool StaticErrorEnabled { get => staticErrorEnabled; set => Instance.ErrorEnabled = staticErrorEnabled = value; }
-        public static bool StaticInfoEnabled { get => staticInfoEnabled; set => Instance.InfoEnabled = staticInfoEnabled = value; }
+        public static bool StaticDebugEnabled { get => staticDebugEnabled; set { Instance.DebugEnabled = value; staticDebugEnabled = value; } }
+        public static bool StaticVerboseEnabled { get => staticVerboseEnabled; set { Instance.VerboseEnabled = value; staticVerboseEnabled = value; } }
+        public static bool StaticErrorEnabled { get => staticErrorEnabled; set { Instance.ErrorEnabled = value; staticErrorEnabled = value; } }
+        public static bool StaticInfoEnabled { get => staticInfoEnabled; set { Instance.InfoEnabled = value; staticInfoEnabled = value; } }
 
         private bool debugEnabled;
         private bool verboseEnabled;
