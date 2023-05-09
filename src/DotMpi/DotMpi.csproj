@@ -14,9 +14,9 @@
 		<Product>HigginsSoft.DotMpi</Product>
 		<Description>DotMpi is a DotNet library that aims to bring multiprocessor functionality inspired by Open MPI to the DotNet world.</Description>
 		<Copyright>HigginsSoft.DotMpi</Copyright>
-		<PackageProjectUrl>https://github.com/alexhiggins732/DotMpi/</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/alexhiggins732/DotMpi</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<RepositoryUrl>https://github.com/alexhiggins732/DotMpi/</RepositoryUrl>
+		<RepositoryUrl>https://github.com/alexhiggins732/DotMpi</RepositoryUrl>
 		<PackageTags>csharp,mpi,dotmpi,parallel,parallel processing,multiprocessor,parallel processes</PackageTags>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
