@@ -25,11 +25,10 @@ jobs:
     - uses: dotnet/nbgv@master
       id: nbgv
     - name: Set Package Version
-      id: setversion
       run: |
-          echo "::set-output name=version::${{ steps.nbgv.outputs.SimpleVersion }}-alpha.${{ steps.nbgv.outputs.VersionRevision }}+${{ steps.nbgv.outputs.GitCommitIdShort }}"
+          echo "NugetPackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}-alpha.${{ steps.nbgv.outputs.VersionRevision }}+${{ steps.nbgv.outputs.GitCommitIdShort }}" >> "$GITHUB_ENV"
     - name: Diplay Package Version
-      run: echo "PackageVersion=${{ steps.setversion.version }}"
+      run: echo "PackageVersion=${{ env.NugetPackageVersion }}"
     - name: Extract release notes
       run: |
         git log --pretty=format:"%h - %an, %ar : %s" > docs/RELEASE-NOTES.txt
@@ -41,8 +40,8 @@ jobs:
       run: dotnet test --configuration Release --no-build --verbosity normal
 
     - name: Pack
-      run: dotnet pack --configuration Release /p:Version=$PACKAGE_VERSION- --output .
+      run: dotnet pack --configuration Release /p:Version=${{ env.NugetPackageVersion }}- --output .
     - name: Push
-      run: dotnet nuget push HigginsSoft.DotMpi.$PACKAGE_VERSION.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push HigginsSoft.DotMpi.${{ env.NugetPackageVersion }}.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
     - name: Push
-      run: dotnet nuget push HigginsSoft.DotMpi.$PACKAGE_VERSION.nupkg --skip-duplicate --source "https://nuget.pkg.github.com/NAMESPACE/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
+      run: dotnet nuget push HigginsSoft.DotMpi.${{ env.NugetPackageVersion }}.nupkg --skip-duplicate --source "https://nuget.pkg.github.com/NAMESPACE/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
