@@ -75,7 +75,6 @@ namespace DotMpi.MpiTests
             public void RemoteCall_DirectMethod()
             {
                 var method = this.GetType().GetMethod(nameof(NotFoundMethod));
-                Assert.IsNotNull(method);
                 var ex = Assert.ThrowsException<ArgumentNullException>(() => MpiRunner.GetRemoteCallData(method, 0));
                 Assert.AreEqual("Value cannot be null. (Parameter 'method')", ex.Message);
 
