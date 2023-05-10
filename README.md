@@ -52,7 +52,18 @@ of data to pass information back and forth.
 
 You can however pass any arguments need to the method that will be invoked and your method can return any state data you need.
 
-### Sample
+
+### What's new
+
+What's new:
+
+ - Events can now be used to access multi-processor function call data before they are executed and to receive real-time access to the return results before waiting for all function calls to complete.
+ - Results are now stored in a Dictionary<int, TResult> to allow consumers to access results based on the start and end indices to the function runner instead of needing to manually map a zero-based index to the call parameters.
+ - Unit tests now offer complete coverage of the public DotMpi api.
+ - Build pipeline has been updated to produce pre-release alpha Nuget packages from the develop branch and pre-release beta release candidate Nuget packages from the release branch.
+
+
+### How to use
 
 #### Hello World
 
