@@ -40,7 +40,7 @@ jobs:
       run: dotnet test --configuration Release --no-build --verbosity normal
 
     - name: Pack
-      run: dotnet pack --configuration Release /p:Version=${{ env.NugetPackageVersion }}- --output .
+      run: dotnet pack --configuration Release /p:Version=${{ env.NugetPackageVersion }} --output .
     - name: Push
       run: dotnet nuget push HigginsSoft.DotMpi.${{ env.NugetPackageVersion }}.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
     - name: Push
