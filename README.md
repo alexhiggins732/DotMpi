@@ -1,6 +1,6 @@
 # DotMpi
 
-![Nuget](https://img.shields.io/nuget/v/HigginsSoft.DotMpi.svg?style=flat-square) ![Tests](https://github.com/alexhiggins732/DotMpi/actions/workflows/dotnet.yml/badge.svg)
+![Nuget](https://img.shields.io/nuget/v/HigginsSoft.DotMpi.svg?style=flat-square) ![Release Tests](https://github.com/alexhiggins732/DotMpi/actions/workflows/release.yml/badge.svg) ![Pre-Release Tests](https://github.com/alexhiggins732/DotMpi/actions/workflows/pre-release.yml/badge.svg)
 
 # Installation
 
