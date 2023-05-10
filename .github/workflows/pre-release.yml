@@ -50,9 +50,6 @@ jobs:
           git config --global user.email "alexhiggins732@github.com"
           git tag ${{ env.NugetPackageVersion }} -a -m "Release ${{ env.NugetPackageVersion }}"
           git push --follow-tags
-      with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tags: true
 
 
     - name: Pack
