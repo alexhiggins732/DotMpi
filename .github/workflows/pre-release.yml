@@ -42,7 +42,8 @@ jobs:
         # If a description is provided, the action will use it to create an annotated tag. If none is given, the action will create a lightweight tag.
         # Default: ''
         description: "Release ${{ env.NugetPackageVersion }}"
-
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Restore dependencies
       run: dotnet restore
