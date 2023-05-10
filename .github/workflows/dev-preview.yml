@@ -24,11 +24,12 @@ jobs:
         dotnet-version: 6.0.x
     - uses: dotnet/nbgv@master
       id: nbgv
-    - run: echo 'SemVer2=${{ steps.nbgv.outputs.SimpleVersion }}'
-      env:
-       PACKAGE_VERSION: ${{ steps.nbgv.outputs.SimpleVersion }}-alpha.${{ steps.nbgv.outputs.VersionRevision }}+${{ steps.nbgv.outputs.GitCommitIdShort }}
+    - name: Set Package Version
+      id: setversion
+      run: |
+          echo "::set-output name=version::${{ steps.nbgv.outputs.SimpleVersion }}-alpha.${{ steps.nbgv.outputs.VersionRevision }}+${{ steps.nbgv.outputs.GitCommitIdShort }}"
     - name: Diplay Package Version
-      run: echo "PackageVersion=$PACKAGE_VERSION"
+      run: echo "PackageVersion=${{ steps.setversion.version }}"
     - name: Extract release notes
       run: |
         git log --pretty=format:"%h - %an, %ar : %s" > docs/RELEASE-NOTES.txt
