@@ -1,13 +1,13 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: .NET
+name: Develop
 
 on:
   push:
-    branches: [ "release/*" ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ "release/*" ]
+    branches: [ "develop" ]
 
 jobs:
   build:
@@ -25,6 +25,10 @@ jobs:
     - uses: dotnet/nbgv@master
       id: nbgv
     - run: echo 'SemVer2=${{ steps.nbgv.outputs.SimpleVersion }}'
+      env:
+       PACKAGE_VERSION: ${{ steps.nbgv.outputs.SimpleVersion }}-alpha.${{ steps.nbgv.outputs.VersionRevision }}+${{ steps.nbgv.outputs.GitCommitIdShort }}
+    - name: Diplay Package Version
+      run: echo "PackageVersion=$PACKAGE_VERSION"
     - name: Extract release notes
       run: |
         git log --pretty=format:"%h - %an, %ar : %s" > docs/RELEASE-NOTES.txt
@@ -34,9 +38,10 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --configuration Release --no-build --verbosity normal
+
     - name: Pack
-      run: dotnet pack --configuration Release /p:Version=${{ steps.nbgv.outputs.SimpleVersion }} --output .
+      run: dotnet pack --configuration Release /p:Version=$PACKAGE_VERSION- --output .
     - name: Push
-      run: dotnet nuget push HigginsSoft.DotMpi.${{ steps.nbgv.outputs.SimpleVersion }}.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push HigginsSoft.DotMpi.$PACKAGE_VERSION.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
     - name: Push
-      run: dotnet nuget push HigginsSoft.DotMpi.${{ steps.nbgv.outputs.SimpleVersion }}.nupkg --skip-duplicate --source "https://nuget.pkg.github.com/NAMESPACE/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
+      run: dotnet nuget push HigginsSoft.DotMpi.$PACKAGE_VERSION.nupkg --skip-duplicate --source "https://nuget.pkg.github.com/NAMESPACE/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
