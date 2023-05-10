@@ -24,6 +24,8 @@ jobs:
         dotnet-version: 6.0.x
 
 
+    - uses: dotnet/nbgv@master
+      id: nbgv
     - name: Set Package Version
       if: startsWith(github.ref, 'refs/heads/develop')
       run: |
