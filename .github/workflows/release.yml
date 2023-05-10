@@ -47,7 +47,7 @@ jobs:
       if: github.event_name == 'push'  
       run: |
           git config --global user.name "Alexander Higgins"
-          git config --global user.email "alexhiggins732@github.com"
+          git config --global user.email "${{ secrets.TAG_EMAIL }}"
           git tag ${{ env.NugetPackageVersion }} -a -m "Release ${{ env.NugetPackageVersion }}"
 
     - name: Push tag
