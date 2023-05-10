@@ -1,13 +1,13 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: Develop
+name: RELEASE
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "develop" ]
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -22,6 +22,8 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
+
+
     - uses: dotnet/nbgv@master
       id: nbgv
     - name: Set Package Version
@@ -29,25 +31,33 @@ jobs:
           echo "NugetPackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}-alpha.${{ steps.nbgv.outputs.VersionRevision }}" >> "$GITHUB_ENV"
     - name: Diplay Package Version
       run: echo "PackageVersion=${{ env.NugetPackageVersion }}"
-    - name: Extract release notes
-      run: |
-        git log --pretty=format:"%h - %an, %ar : %s" > docs/RELEASE-NOTES.txt
+
+
+
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore -p:Version=${{ steps.nbgv.outputs.AssemblyFileVersion }}
     - name: Test
       run: dotnet test --configuration Release --no-build --verbosity normal
-    - name: Create tag
-      run: git tag -a ${{ env.NugetPackageVersion }} -m "Release ${{ env.NugetPackageVersion }}"
 
+
+
+    - name: Create tag
+      if: github.event_name == 'push'  
+      run: git tag -a ${{ env.NugetPackageVersion }} -m "Release ${{ env.NugetPackageVersion }}"
     - name: Push tag
+      if: github.event_name == 'push'  
       uses: ad-m/github-push-action@v0.6.0
       with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           tags: true
+
+
     - name: Pack
+      if: github.event_name == 'push'
       run: dotnet pack --configuration Release /p:Version=${{ env.NugetPackageVersion }}${{ steps.nbgv.outputs.BuildMetadataFragment }} --output .
     - name: Push
+      if: github.event_name == 'push'  
       run: dotnet nuget push HigginsSoft.DotMpi.${{ env.NugetPackageVersion }}.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
 
