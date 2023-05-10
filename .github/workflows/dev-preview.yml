@@ -35,12 +35,12 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --configuration Release --no-restore -p:Version=${{ steps.nbgv.outputs.AssemblyFileVersion }}
     - name: Test
       run: dotnet test --configuration Release --no-build --verbosity normal
 
     - name: Pack
-      run: dotnet pack --configuration Release /p:Version=${{ env.NugetPackageVersion }} --output .
+      run: dotnet pack --configuration Release /p:Version=${{ env.NugetPackageVersion }}${{ steps.nbgv.outputs.BuildMetadataFragment }} --output .
     - name: Push
       run: dotnet nuget push HigginsSoft.DotMpi.${{ env.NugetPackageVersion }}.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
 
