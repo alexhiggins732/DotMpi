@@ -35,7 +35,7 @@ namespace DotMpi
         public static string id { get => $"[{_id}]"; set => _id = value; }
         internal static Logger Logger = Logger.Instance;
 
-        public static RemoteCallData GetRemoteCallData(MethodInfo method, params object[] args)
+        public static RemoteCallData GetRemoteCallData(MethodInfo? method, params object[] args)
         {
             if (method is null)
             {
@@ -132,8 +132,12 @@ namespace DotMpi
         {
 
             var resultObject = HandleRemoteCall(json);
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             var result = (TResult)resultObject.ObjectValue;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8603 // Possible null reference return.
             return result;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         //Clients read json from IPC stream and pass it to this method to deserialize the method parameters, execute it, and return a result
@@ -183,7 +187,9 @@ namespace DotMpi
             var m = asm.ManifestModule.ResolveMethod(callData.MethodInfo.MetaDataToken);
             var args = callData.ArgInfo.Select(x => x.ObjectValue).ToArray();
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             var methodResult = m.Invoke(null, args);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             if (Logger.InfoEnabled)
             {

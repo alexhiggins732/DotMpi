@@ -57,8 +57,9 @@ namespace DotMpi.MpiTests
                 func.Run().Wait();
 
                 Assert.AreEqual(3, func.Tasks.Count);
-                Assert.IsNotNull(func.Results[0]);
-                Assert.IsTrue(func.Results[0].StartsWith("Thread 0"));
+                var result = func.Results[0];
+                Assert.IsNotNull(result);
+                Assert.IsTrue(result.StartsWith("Thread 0"));
 
             }
 

@@ -61,7 +61,9 @@ namespace DotMpi
             {
                 var t = typeof(SerializableValue<>).MakeGenericType(type);
                 ConstructorInfo constructor = t.GetConstructor(new Type[] { type });
+#pragma warning disable CS8601 // Possible null reference assignment.
                 object serializableValue = constructor.Invoke(new object[] { valueObject }); // creates a SerializableValue<int> with value 
+#pragma warning restore CS8601 // Possible null reference assignment.
                 return serializableValue;
             }
             else
