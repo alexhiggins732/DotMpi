@@ -32,19 +32,17 @@ jobs:
     - name: Diplay Package Version
       run: echo "PackageVersion=${{ env.NugetPackageVersion }}"
 
-    - name: Create tag
-      if: github.event_name == 'push'  
-      run: |
-          git config --global user.name "Alexander Higgins"
-          git config --global user.email "${{ secrets.TAG_EMAIL }}"
-          git tag ${{ env.NugetPackageVersion }} -a -m "Release ${{ env.NugetPackageVersion }}"
-
-    - name: Push tag
-      if: github.event_name == 'push'  
-      uses: ad-m/github-push-action@v0.6.0
+    - name: Run latest-tag
+      uses: EndBug/latest-tag@latest
       with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tags: true
+        # You can change the name of the tag or branch with this input.
+        # Default: 'latest'
+        ref: ${{ env.NugetPackageVersion }}
+
+        # If a description is provided, the action will use it to create an annotated tag. If none is given, the action will create a lightweight tag.
+        # Default: ''
+        description: "Release ${{ env.NugetPackageVersion }}"
+
 
     - name: Restore dependencies
       run: dotnet restore
@@ -53,20 +51,6 @@ jobs:
     - name: Test
       run: dotnet test --configuration Release --no-build --verbosity normal
 
-
-
-    - name: Create tag
-      if: github.event_name == 'push'  
-      run: |
-          git config --global user.name "Alexander Higgins"
-          git config --global user.email "${{ secrets.TAG_EMAIL }}"
-          git tag ${{ env.NugetPackageVersion }} -a -m "Release ${{ env.NugetPackageVersion }}"
-    - name: Push tag
-      if: github.event_name == 'push'  
-      uses: ad-m/github-push-action@v0.6.0
-      with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tags: true
 
 
     - name: Pack
