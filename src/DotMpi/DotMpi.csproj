@@ -99,9 +99,4 @@
 			<DependentUpon>ParallelFunctionBuilder.tt</DependentUpon>
 		</Compile>
 	</ItemGroup>
-	<Target Name="PrepareReleaseNotes" BeforeTargets="GenerateNuspec">
-		<PropertyGroup>
-			<Description>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../docs/RELEASE-NOTES"))</Description>
-		</PropertyGroup>
-	</Target>
 </Project>

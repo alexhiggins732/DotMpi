@@ -70,10 +70,10 @@ namespace DotMpi
 
         public static string MpiHelloWorld(int threadIndex, string message)
         {
-         
+
             return @$"{message} from thread {threadIndex} on process {ProcessId} on cpu {Cpu}";
         }
-          
+
         public static void HelloWorldTest(int numThreads)
         {
             Func<int, string, string> target = MpiHelloWorld;
@@ -116,7 +116,10 @@ namespace DotMpi
             for (var i = 0; i < numThreads; i++)
             {
                 var result = controller.Results[i];
-                Console.WriteLine($"[{DateTime.Now}] Result {i}: {result.Status}");
+                if (result != null)
+                    Console.WriteLine($"[{DateTime.Now}] Result {i}: {result.Status}");
+                else
+                    Console.WriteLine($"[{DateTime.Now}] Result {i}: [null]");
             }
             Console.WriteLine($"[{DateTime.Now}] Completed {numThreads} in {timer.Elapsed}");
 
@@ -215,7 +218,7 @@ namespace DotMpi
             var runner = Mpi
                 .ParallelFor(0, numThreads, target, i => new(i, i + 1))
                 .Run()
-                .Wait(); 
+                .Wait();
 
             timer.Stop();
 

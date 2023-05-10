@@ -81,7 +81,9 @@ namespace DotMpi.MpiTests
                 Func<int, string, string> target = MpiHelloWorld1;
                 var fn = Mpi.ParallelFor(1, target, i => new(i, "Hello World"));
                 var result = fn.Run().Wait();
-                Assert.IsTrue(result.Results.Single().StartsWith("Hello World"));
+                var firstResult = result.Results.Single().Value;
+                Assert.IsNotNull(firstResult);
+                Assert.IsTrue(firstResult.StartsWith("Hello World"));
             }
 
             [TestMethod]

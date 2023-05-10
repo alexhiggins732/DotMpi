@@ -52,7 +52,7 @@ namespace DotMpi
             /// <summary>
             /// Array of results returned from each executed process. Results are ordered by the processor thread they were returned from.
             /// </summary>
-            public TResult[] Results = new TResult[] { };
+            public Dictionary<int, TResult?> Results = new();
 
             /// <summary>
             /// A list of task that monitor each process thread for completion.
@@ -239,10 +239,12 @@ namespace DotMpi
                 var end = End;
                 var numThreads = end - start;
                 Tasks = new List<Task>();
-                Results = new TResult[numThreads];
+
                 for (var i = start; i < end; i++)
                 {
                     var threadIndex = i;
+
+                    Results[threadIndex] = default;
 
                     ValidateProcessCount(exeName);
 
@@ -404,10 +406,14 @@ namespace DotMpi
                     pipeServer.Close();
 
                     var json = System.Text.Encoding.UTF8.GetString(byteData);
-                    var result = JsonConvert.DeserializeObject<SerializableValue<TResult>>(json);
-#pragma warning disable CS8601 // Possible null reference assignment.
-                    Results[index] = result.Result;
-#pragma warning restore CS8601 // Possible null reference assignment.
+                    var result = JsonConvert.DeserializeObject<SerializableValue<TResult?>>(json);
+
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    var value = result.Result;
+                    if (value is not null)
+                        Results[index] = value;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
                     if (Logger.DebugEnabled)
                         Logger.Debug($"[{DateTime.Now}] {id} Read result from client {index} {pipeName} - {json}");
 

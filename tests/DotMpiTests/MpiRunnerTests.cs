@@ -79,6 +79,7 @@ namespace DotMpi.MpiTests
                 Assert.AreEqual("Value cannot be null. (Parameter 'method')", ex.Message);
 
                 method = this.GetType().GetMethod(nameof(NotFoundMethod), System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+                Assert.IsNotNull(method);
                 var data = MpiRunner.GetRemoteCallData(method, 0);
                 Assert.IsNotNull(data);
                 Assert.AreEqual(data.MethodInfo.MetaDataToken, method.MetadataToken);
@@ -91,7 +92,9 @@ namespace DotMpi.MpiTests
                 Assert.IsNotNull(info);
                 Assert.IsTrue(info.Length == 0);
 
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
                 info = MpiRunner.GetArgInfos(null);
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
                 Assert.IsNotNull(info);
                 Assert.IsTrue(info.Length == 0);
 
@@ -110,7 +113,9 @@ namespace DotMpi.MpiTests
             [TestMethod()]
             public void HandleRemoteCallTest()
             {
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
                 Exception ex = Assert.ThrowsException<ArgumentNullException>(() => MpiRunner.HandleRemoteCall(null));
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
                 Assert.AreEqual("Value cannot be null. (Parameter 'json')", ex.Message);
 
 

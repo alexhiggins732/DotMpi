@@ -39,13 +39,16 @@ namespace DotMpi
             var methodTypeAssembly = methodType.Assembly;
 
 
+#pragma warning disable CS8601 // Possible null reference assignment.
             TypeName = declaringType.FullName;
             AssemblyName = assembly.FullName;
+
             var methodPointer = method.MethodHandle.GetFunctionPointer();
             FunctionPointer = methodPointer.ToInt64();
             this.MetaDataToken = method.MetadataToken;
             MethodTypeAssemblyFullName = methodTypeAssembly.FullName;
             MethodTypeFullName = methodType.FullName;
+#pragma warning restore CS8601 // Possible null reference assignment.
         }
 
         //public string AssemblyName { get; }

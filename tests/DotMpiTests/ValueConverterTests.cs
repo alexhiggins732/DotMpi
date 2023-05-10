@@ -82,8 +82,10 @@ namespace DotMpi.Tests
             var nullJson = JsonConvert.SerializeObject(result);
             Assert.IsTrue(nullJson == "null");
 
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             SerializableValue a = null;
-            var t = new { b="tests", a=a };
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+            var t = new { b = "tests", a = a };
             json = JsonConvert.SerializeObject(a);
             Assert.IsNotNull(json);
 
