@@ -25,6 +25,7 @@ using static DotMpi.Mpi;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 
 namespace DotMpi
 {
@@ -83,7 +84,7 @@ namespace DotMpi
 
 
         //TODO: delete method, use strongly typed function call data class.
-    
+
         internal static TResult Exec<TResult>(MethodInfo method, params object[] args)
         {
             var callData = GetRemoteCallData(method, args);
@@ -92,7 +93,7 @@ namespace DotMpi
         }
 
         //TODO: delete method, use strongly typed function call data class.
-       
+
         internal static TResult
             Exec<TResult>(Func<TResult> fn)
             => Exec<TResult>(fn.Method);
@@ -132,6 +133,11 @@ namespace DotMpi
         {
 
             var resultObject = HandleRemoteCall(json);
+            if (resultObject.HasError && resultObject.ErrorData is not null)
+            {
+                Exception ex = resultObject.ErrorData.ToException();
+                throw ex;
+            }
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             var result = (TResult)resultObject.ObjectValue;
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
@@ -147,6 +153,10 @@ namespace DotMpi
             {
                 throw new ArgumentNullException(nameof(json));
             }
+            if (Logger.InfoEnabled)
+            {
+                Logger.Info($"{id} Deserializing Json.");
+            }
 
             var callData = JsonConvert.DeserializeObject<RemoteCallData>(json);
 
@@ -154,12 +164,35 @@ namespace DotMpi
             {
                 throw new ArgumentException($"Failed to deserialize Remote call data from json: {json}");
             }
-            var objectResult = Execute(callData);
+
+            if (Logger.InfoEnabled)
+            {
+                Logger.Info($"{id} Calling Execute(method, {string.Join(", ", callData.ArgInfo.Select(x => x.ObjectValue))}).");
+            }
+
+            Exception? caught = null;
+
+            object? objectResult = null;
+            try
+            {
+                objectResult = Execute(callData);
+            }
+            catch (Exception ex)
+            {
+                caught = ex;
+            }
+
+
             SerializableValue result = new SerializableValue(objectResult);
             if (objectResult is null)
             {
                 result.TypeName = callData.ReturnInfo.TypeName;
                 result.AssemblyName = callData.ReturnInfo.AssemblyName;
+            }
+            if (caught != null)
+            {
+                var errorData = ErrorData.Create(caught);
+                result.ErrorData = errorData;
             }
             return result;
 
@@ -170,43 +203,85 @@ namespace DotMpi
         internal static object? Execute(RemoteCallData callData)
         {
             var assemblyName = callData.MethodInfo.AssemblyName.Split(",")[0];
-            Assembly asm = assemblyRefs.GetOrAdd(assemblyName, x =>
+            Assembly asm = null!;
+            try
             {
-                if (File.Exists($"{assemblyName}.dll"))
+                asm = assemblyRefs.GetOrAdd(assemblyName, x =>
                 {
-                    var fullPath = Path.GetFullPath($"{assemblyName}.dll");
-                    return Assembly.LoadFile(fullPath);
-                }
-                else
+                    if (File.Exists($"{assemblyName}.dll"))
+                    {
+                        var fullPath = Path.GetFullPath($"{assemblyName}.dll");
+                        return Assembly.UnsafeLoadFrom(fullPath);
+                    }
+                    else
+                    {
+                        return Assembly.Load(callData.MethodInfo.AssemblyName);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                if (Logger.ErrorEnabled)
                 {
-                    return Assembly.Load(callData.MethodInfo.AssemblyName);
+                    Logger.Error($"{id} Failed To Load Assembly '{assemblyName}' to execute method", ex);
+                    throw;
                 }
-            });
-
+            }
 
             var m = asm.ManifestModule.ResolveMethod(callData.MethodInfo.MetaDataToken);
+            if (m == null)
+            {
+                throw new MissingMethodException($"Failed to resolve method token: {callData.MethodInfo.MetaDataToken}");
+            }
             var args = callData.ArgInfo.Select(x => x.ObjectValue).ToArray();
 
+            var sw = Stopwatch.StartNew();
+            object? methodResult = null!;
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            var methodResult = m.Invoke(null, args);
+            try
+            {
+                methodResult = m.Invoke(null, args);
+            }
+            catch (Exception ex)
+            {
+                if (Logger.ErrorEnabled)
+                {
+                    try
+                    {
+                        Logger.Error($"{id} Error executing method '{m.Name}({string.Join(", ", args)})'", ex);
+                    }
+                    catch (Exception logException)
+                    {
+                        Logger.Error($"{id} Error logging error when executing method {logException.Message} - Original error: '{m.Name}({string.Join(", ", args)})' - {ex.Message}");
+                    }
+                    throw;
+                }
+            }
+            sw.Stop();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             if (Logger.InfoEnabled)
             {
                 var resultJson = JsonConvert.SerializeObject(methodResult);
-                Logger.Info($"[{DateTime.Now}] {id} {m.Name}({string.Join(",", args)}) returned {resultJson}");
+                Logger.Info($"{id} {m.Name}({string.Join(",", args)}) took {sw.Elapsed} and returned {resultJson}");
             }
             return methodResult;
         }
 
         internal static void HandleRemoteCall(BinaryWriter writer, BinaryReader reader, string pipe, int threadIndex)
         {
+            var sw = Stopwatch.StartNew();
             var length = reader.ReadInt32();
             var bytes = reader.ReadBytes(length);
             var json = Encoding.UTF8.GetString(bytes);
+            sw.Stop();
 
+            SerializableValue objectResult = null!;
             if (Logger.InfoEnabled)
             {
+                Logger.Info($"{id} [{pipe}] [Thread {threadIndex}] reading call data took {sw.Elapsed}");
+
+                sw.Restart();
                 var callData = JsonConvert.DeserializeObject<RemoteCallData>(json);
 
                 if (callData is null)
@@ -214,16 +289,32 @@ namespace DotMpi
                     throw new ArgumentException($"Failed to deserialize call data: {json}");
                 }
                 var debugJson = callData.DebugJson();
-                Logger.Info($"[{DateTime.Now}] {id} [{pipe}] [Thread {threadIndex}] call data: {debugJson}");
+                sw.Stop();
+
+                Logger.Info($"{id} [{pipe}] [Thread {threadIndex}] deserialized call data in {sw.Elapsed}: {debugJson}");      
+            }
+
+            sw.Restart();
+            objectResult = HandleRemoteCall(json);
+            sw.Stop();
+
+            if (Logger.InfoEnabled)
+            {
+                Logger.Info($"{id} [{pipe}] [Thread {threadIndex}] HandleRemoteCall took {sw.Elapsed}");
             }
 
 
-
-            SerializableValue objectResult = HandleRemoteCall(json);
+            sw.Restart();
             var resultData = objectResult.ToByteArray();
-
             writer.Write(resultData.Length);
             writer.Write(resultData);
+            sw.Stop();
+
+            if (Logger.InfoEnabled)
+            {
+                Logger.Info($"{id} [{pipe}] [Thread {threadIndex}] Send call results took {sw.Elapsed}");
+            }
+
         }
 
 

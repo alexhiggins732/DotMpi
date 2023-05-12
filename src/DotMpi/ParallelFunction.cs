@@ -42,11 +42,17 @@ namespace DotMpi
             public Func<int, IArgProvider>? ArgProvider { get; protected set; }
             public Delegate? Delegate { get; protected set; }
 
+            public bool EnableLogging { get; set; }
+            public ParallelFunction<TResult> WithLogging(bool enableLogging = true)
+            {
+                this.EnableLogging = enableLogging;
+                return this;
+            }
             public FunctionRunner<TResult> Build()
-                => new FunctionRunner<TResult>(this);
+                => new FunctionRunner<TResult>(this, EnableLogging);
             public FunctionRunner<TResult> Run()
                 => Build().Run();
-  
+
         }
     }
 }

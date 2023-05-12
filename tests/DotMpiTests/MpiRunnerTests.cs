@@ -157,7 +157,7 @@ namespace DotMpi.MpiTests
 
 
                 data.MethodInfo.MetaDataToken = 0;
-
+                
                 Exception ex = Assert.ThrowsException<ArgumentException>(() => MpiRunner.ExecuteRemoteCall<string>(data));
                 Assert.IsTrue(ex.Message.StartsWith("Token 0x00000000 is not a valid MethodBase token in the scope of module"));
 
