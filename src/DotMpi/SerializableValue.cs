@@ -22,6 +22,9 @@ namespace DotMpi
     {
 
         public object? ObjectValue { get; set; } = null!;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ErrorData? ErrorData { get; set; }
+        public bool HasError => ErrorData is not null;
 
         public SerializableValue()
         {
