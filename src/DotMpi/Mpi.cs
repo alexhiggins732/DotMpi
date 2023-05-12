@@ -18,13 +18,7 @@ namespace DotMpi
 {
     public partial class Mpi
     {
-        static Mpi()
-        {
-            if (!File.Exists("DotMpi.runtimeconfig.json"))
-            {
-                File.WriteAllText(GetRuntimeConfig());
-            }
-        }
+
         private static string pipeName = string.Empty;
         public static string id => $"[{pipeName}]";
         public static string PipeName { get => pipeName; set => MpiRunner.id = pipeName = value; }
@@ -66,6 +60,16 @@ namespace DotMpi
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
                 .For(target).WithArgs(argProvider);
             return builder;
+        }
+
+
+        static Mpi()
+        {
+            var runtimeConfigPath = Path.GetFullPath("DotMpi.runtimeconfig.json");
+            if (!File.Exists(runtimeConfigPath))
+            {
+                File.WriteAllText(runtimeConfigPath, GetRuntimeConfig());
+            }
         }
 
         static string GetRuntimeConfig()
