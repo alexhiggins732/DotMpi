@@ -123,10 +123,10 @@ namespace DotMpi
             OutputStream.Flush();
         }
 
-        ConcurrentDictionary<string, StreamWriter> logStreams = new();
+        static ConcurrentDictionary<string, StreamWriter> logStreams = new();
         internal void LogToFile(string logFileName)
         {
-            this.OutputStream = logStreams.GetOrAdd(logFileName, x => new StreamWriter(x, true));
+            this.OutputStream = Console.Out;/// logStreams.GetOrAdd(logFileName, x => new StreamWriter(x, true,leaveOpen:true));
         }
     }
 }

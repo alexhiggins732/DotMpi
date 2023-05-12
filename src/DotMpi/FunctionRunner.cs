@@ -354,7 +354,7 @@ namespace DotMpi
 
                     if (LoggingEnabled)
                     {
-                        Logger.Info($"{id} Starting Server[{threadIndex}] {pipeName}");
+                        Logger.Info($"{id} Starting Server[{threadIndex}] {pipeName} - {p.Id} 'dotnet {processArgs} ");
                     }
                     var serverTask = Task.Run(async () =>
                     {
@@ -364,13 +364,16 @@ namespace DotMpi
                             var provider = argProvider(threadIndex);
                             if (LoggingEnabled)
                             {
-
                                 var args = provider.ToArray();
                                 Logger.Info($"{id} Executing {nameof(Run)}(pipeServer, {pipeName}, {threadIndex}, args: {string.Join(",", args)})");
                             }
                             pipeServer = new NamedPipeServerStream(pipeName);
 
-
+                            if (LoggingEnabled)
+                            {
+                                
+                                Logger.Info($"{id} Executing {nameof(Run)}(pipeServer, {pipeName}, {threadIndex} - Waiting for connection.");
+                            }
                             await pipeServer.WaitForConnectionAsync();
                             Logger.Info($"{id} Connected Server[{threadIndex}] {pipeName}");
                             RunProcess(Delegate, pipeServer, pipeName, p, threadIndex, argProvider);
