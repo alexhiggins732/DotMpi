@@ -301,7 +301,7 @@ namespace DotMpi
                 }
                 catch
                 {
-                    //Do nothing. Some build pipelines don't allow setting ProcessPriorityClass.RealTime
+                    //Do nothing. Some build pipelines don't allow setting ProcessPriorityClass.AboveNormal
                 }
 
                 IsRunning = true;
