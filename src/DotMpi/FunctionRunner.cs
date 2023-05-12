@@ -287,7 +287,23 @@ namespace DotMpi
 
                     throw new Exception(errorMessage);
                 }
-                Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
+                try
+                {
+                    Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
+                }
+                catch
+                {
+                    //Do nothing. Some build pipelines don't allow setting ProcessPriorityClass.RealTime
+                }
+                try
+                {
+                    Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.AboveNormal;
+                }
+                catch
+                {
+                    //Do nothing. Some build pipelines don't allow setting ProcessPriorityClass.RealTime
+                }
+
                 IsRunning = true;
 
                 Tasks.Clear();
