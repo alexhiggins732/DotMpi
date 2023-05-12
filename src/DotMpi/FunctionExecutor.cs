@@ -23,28 +23,37 @@ namespace DotMpi
         {
             internal static void RunThread(int threadIndex, string pipeName)
             {
+
                 if (Logger.InfoEnabled)
-                    Logger.Info($"[{DateTime.Now}] {id} Executing {nameof(RunThread)}: {string.Join(",", new object[] { threadIndex, pipeName })}");
-                using NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", pipeName);
+                    Logger.Info($"{id} Executing {nameof(RunThread)}: {string.Join(",", new object[] { threadIndex, pipeName })}");
                 try
                 {
+                    using NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", pipeName);
+
                     if (Logger.DebugEnabled)
-                        Logger.Debug($"[{DateTime.Now}] {id} Executing {nameof(RunThread)}:{nameof(pipeClient)}.{nameof(pipeClient.Connect)}({pipeName})");
+                        Logger.Debug($"{id} Executing {nameof(RunThread)}:{nameof(pipeClient)}.{nameof(pipeClient.Connect)}({pipeName})");
+                    
                     pipeClient.Connect();
 
                     if (Logger.DebugEnabled)
-                        Logger.Debug($"[{DateTime.Now}] {id} Executed {nameof(RunThread)}:{nameof(pipeClient)}.{nameof(pipeClient.Connect)}({pipeName})");
+                        Logger.Debug($"{id} Executed {nameof(RunThread)}:{nameof(pipeClient)}.{nameof(pipeClient.Connect)}({pipeName})");
 
                     using var reader = new BinaryReader(pipeClient);
                     using (var writer = new BinaryWriter(pipeClient))
                         try
                         {
+                            if (Logger.DebugEnabled)
+                                Logger.Debug($"{id} Calling {nameof(MpiRunner.HandleRemoteCall)}:{nameof(pipeClient)}.{nameof(pipeClient.Connect)}({pipeName})");
+                            
                             MpiRunner.HandleRemoteCall(writer, reader, pipeName, threadIndex);
+
+                            if (Logger.DebugEnabled)
+                                Logger.Debug($"{id} Executed {nameof(MpiRunner.HandleRemoteCall)}:{nameof(pipeClient)}.{nameof(pipeClient.Connect)}({pipeName})");
                         }
 
                         catch (Exception ex)
                         {
-                            var errorMessage = $"[{DateTime.Now}] [{pipeName}] Error running thread {threadIndex}: {ex}";
+                            var errorMessage = $"[{pipeName}] Error running thread {threadIndex}: {ex}";
                             if (Logger.ErrorEnabled)
                                 Logger.Error(errorMessage);
 
@@ -60,13 +69,13 @@ namespace DotMpi
                 }
                 catch (Exception ex)
                 {
-                    var errorMessage = $"[{DateTime.Now}] [{pipeName}] Error running thread {threadIndex}: {ex}";
+                    var errorMessage = $"[{pipeName}] Error running thread {threadIndex}: {ex}";
                     if (Logger.ErrorEnabled)
                         Logger.Error(errorMessage);
 
                 }
                 if (Logger.InfoEnabled)
-                    Logger.Info($"[{DateTime.Now}] {id} Completed {nameof(RunThread)}: {string.Join(",", new object[] { threadIndex, pipeName })}");
+                    Logger.Info($"{id} Completed {nameof(RunThread)}: {string.Join(",", new object[] { threadIndex, pipeName })}");
 
             }
         }

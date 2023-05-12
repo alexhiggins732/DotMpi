@@ -25,18 +25,40 @@ namespace DotMpi
         static void Main(string[] args)
         {
             if (args.Length == 0) goto InvalidArguments;
+
+            bool enableLogging = false;
+
+            if (args.Any(x => x.ToLower().Contains("log")))
+            {
+                enableLogging = true;
+                var logParam = args.First(x => x.ToLower().Contains("log"));
+                args = args.Except(new[] { logParam }).ToArray();
+                Logger.Instance.EnableAll();
+            }
+
             pipeName = $"Process-{Process.GetCurrentProcess().Id}";
             Console.WriteLine($"[{DateTime.Now}] {id} Running {string.Join(",", args)}");
             if (args.Length == 1 && args[0] == "kill")
             {
                 var currentProcess = Process.GetCurrentProcess();
 
-
+                var processName = currentProcess.ProcessName;
                 var procs = Process
-                    .GetProcessesByName(currentProcess.ProcessName)
+                    .GetProcessesByName(processName)
                     .Where(x => x.Id != currentProcess.Id)
-                    .ToList();
-                procs.ForEach(p => p.Kill());
+                    .Concat(Process
+                    .GetProcessesByName("DotNet")
+                    .Where(x => x.Id != currentProcess.Id && x.StartInfo.Arguments.Contains(processName))
+                    ).ToList();
+
+                Console.WriteLine($"[{DateTime.Now}] {id} Killing {procs.Count} processes {string.Join(",", procs.Select(p => p.Id))}");
+
+                procs.ForEach(p =>
+                {
+
+                    Console.WriteLine($"[{DateTime.Now}] {id} Killing  processes {p.Id}");
+                    p.Kill();
+                });
 
             }
             if (args.Length == 1 && args[0] == "launch")
@@ -87,11 +109,33 @@ namespace DotMpi
                      int.TryParse(args[1], out var clientIndex)
                     )
                 {
-                    pipeName = args[2];
-                    Console.WriteLine($"[{DateTime.Now}] {id} Launching mpi runner: {string.Join(",", args)}");
-                    SetProcessor(clientIndex);
-                    Mpi.PipeName = pipeName;
-                    Mpi.FunctionExecutor.RunThread(clientIndex, pipeName);
+                    try
+                    {
+
+                        pipeName = args[2];
+                        if (enableLogging)
+                        {
+                            Logger.Instance.OutputStream = new StreamWriter($"DotMpi-{clientIndex}-{pipeName}.log", true);
+                        }
+                        var sw = Stopwatch.StartNew();
+                        var message = $"[{DateTime.Now}] {id} Launching mpi runner: {string.Join(",", args)}";
+                        if (enableLogging)
+                            Logger.Instance.Info(message);
+                        SetProcessor(clientIndex);
+                        Mpi.PipeName = pipeName;
+                        Mpi.FunctionExecutor.RunThread(clientIndex, pipeName);
+                        sw.Stop();
+                        if (enableLogging)
+                        {
+                            message = $"[{DateTime.Now}] {id} Executed mpi runner in {sw.Elapsed}";
+                            Logger.Instance.Info(message);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LogError($"[{DateTime.Now}] {id} Error Launching mpi runner: {string.Join(",", args)} - {ex}");
+
+                    }
                     return;
                 }
                 else
@@ -128,8 +172,17 @@ namespace DotMpi
             }
 
         InvalidArguments:
-            Console.WriteLine($"[{DateTime.Now}] {id} Invalid arguments {string.Join(", ", args)}");
+            LogError($"[{DateTime.Now}] {id} Invalid arguments {string.Join(", ", args)}");
 
+        }
+        private static void LogInfo(string message)
+        {
+            File.AppendAllText("DotMpi.log", $"{message}\n");
+        }
+
+        private static void LogError(string message)
+        {
+            File.AppendAllText("DotMpiError.log", $"{message}\n");
         }
 
         [SupportedOSPlatformGuard("windows")]  // The platform guard attributes used
@@ -165,5 +218,5 @@ namespace DotMpi
 
 
 
-  
+
 

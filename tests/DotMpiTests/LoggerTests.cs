@@ -117,7 +117,7 @@ namespace DotMpi.Tests
             ms.Position = 0;
             var reader = new StreamReader(ms, Encoding.UTF8);
             string result = reader.ReadToEnd();
-            Assert.IsTrue(result.StartsWith($"[{nameof(logger.Debug)}] Test"));
+            Assert.IsTrue(result.Contains($"[{nameof(logger.Debug)}] Test"));
 
         }
 
@@ -139,7 +139,7 @@ namespace DotMpi.Tests
             ms.Position = 0;
             var reader = new StreamReader(ms, Encoding.UTF8);
             string result = reader.ReadToEnd();
-            Assert.IsTrue(result.StartsWith($"[{nameof(logger.Verbose)}] Test"));
+            Assert.IsTrue(result.Contains($"[{nameof(logger.Verbose)}] Test"));
         }
 
 
@@ -161,7 +161,7 @@ namespace DotMpi.Tests
             ms.Position = 0;
             var reader = new StreamReader(ms, Encoding.UTF8);
             string result = reader.ReadToEnd();
-            Assert.IsTrue(result.StartsWith($"[{nameof(logger.Info)}] Test"));
+            Assert.IsTrue(result.Contains($"[{nameof(logger.Info)}] Test"));
 
         }
 
@@ -185,7 +185,7 @@ namespace DotMpi.Tests
             ms.Position = 0;
             var reader = new StreamReader(ms, Encoding.UTF8);
             string result = reader.ReadToEnd();
-            Assert.IsTrue(result.StartsWith($"[{nameof(logger.Error)}] Test"));
+            Assert.IsTrue(result.Contains($"[{nameof(logger.Error)}] Test"));
 
         }
 
@@ -209,7 +209,7 @@ namespace DotMpi.Tests
             ms.Position = 0;
             var reader = new StreamReader(ms, Encoding.UTF8);
             string result = reader.ReadToEnd();
-            Assert.IsTrue(result.StartsWith($"[{nameof(logger.Error)}] Test"));
+            Assert.IsTrue(result.Contains($"[{nameof(logger.Error)}] Test"));
             Assert.IsTrue(result.IndexOf("Test Exception") > 17);
         }
 

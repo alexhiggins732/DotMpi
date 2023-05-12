@@ -29,7 +29,7 @@ DotMpi also opens up possibilities for proper stress testing, load testing, and 
 
 To use DotMpi, simply reference the DotMpi namespace in your code and use the available functions.
 
-For convience, the syntax of the existing `Parallel.For` is available as part of a fluent API.
+For convenience, the syntax of the existing `Parallel.For` is available as part of a fluent API.
 
 ``` csharp
 var runner = Mpi
@@ -37,6 +37,12 @@ var runner = Mpi
     .Run()
     .Wait();
 ```
+
+Like the built in `System.Threading.Tasks.Parallel.For` the first to arguments represent the start and end index inclusive.
+
+The third and for paramters are exclusive to `DotMpi`. The 3rd parameter, `target`, is the target function you wish to execute.
+
+The the fourth paramter is a function to supply arguments to your `target` function.
 
 The `Wait()` function will block until all processes have completed. If you do not want to block
 instead of calling `Wait()` just call `Run()` and monitor execution with the methods available. 
@@ -61,6 +67,7 @@ What's new:
  - Results are now stored in a Dictionary<int, TResult> to allow consumers to access results based on the start and end indices to the function runner instead of needing to manually map a zero-based index to the call parameters.
  - Unit tests now offer complete coverage of the public DotMpi api.
  - Build pipeline has been updated to produce pre-release alpha Nuget packages from the develop branch and pre-release beta release candidate Nuget packages from the release branch.
+ - Error logging can be enabled using `WithLogging` using the fluent api. This sets the `EnableLogging` property on the `FunctionRunner<T>` and also enables file based logging for each process.
 
 
 ### How to use
