@@ -26,10 +26,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="DotMpi.runtimeconfig.json">
+	  <Content Include="DotMpi.runtimeconfig.json" copyToOutput="true">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		  <IncludeInPackage>true</IncludeInPackage>
+		  <CopyToOutput>true</CopyToOutput>
+		  <BuildAction>Content</BuildAction>
+		  <copyToOutput>true</copyToOutput>
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 	</ItemGroup>
