@@ -18,6 +18,13 @@ namespace DotMpi
 {
     public partial class Mpi
     {
+        static Mpi()
+        {
+            if (!File.Exists("DotMpi.runtimeconfig.json"))
+            {
+                File.WriteAllText(GetRuntimeConfig());
+            }
+        }
         private static string pipeName = string.Empty;
         public static string id => $"[{pipeName}]";
         public static string PipeName { get => pipeName; set => MpiRunner.id = pipeName = value; }
@@ -59,6 +66,12 @@ namespace DotMpi
             var builder = new ParallelFunctionBuilder(fromInclusive, toExclusive)
                 .For(target).WithArgs(argProvider);
             return builder;
+        }
+
+        static string GetRuntimeConfig()
+        {
+            var config = "{\"runtimeOptions\":{\"tfm\":\"net6.0\",\"framework\":{\"name\":\"Microsoft.NETCore.App\",\"version\":\"6.0.0\"}}}";
+            return config;
         }
     }
 }
