@@ -104,7 +104,7 @@ namespace DotMpi
             /// <summary>
             /// A list of processes for each process thread executed.
             /// </summary>
-            internal List<Process> procs = new();
+            public List<Process> procs = new();
 
             /// <summary>
             /// Delegate function to provide arguments to each process.
@@ -320,7 +320,7 @@ namespace DotMpi
                 var sw = Stopwatch.StartNew();
                 if (LoggingEnabled)
                 {
-                    Logger.OutputStream = new StreamWriter($"DotMpi-Master.log", true);
+                    Logger.LogToFile($"DotMpi-Master.log");
                     Logger.EnableAll();
                     Logger.Info($"{id} Running {numThreads} processes.");
                 }
@@ -379,8 +379,10 @@ namespace DotMpi
                         }
                         catch (Exception ex)
                         {
+                            var message= $"{id} Error executing mpi runner {threadIndex} on {pipeName}";
                             if (LoggingEnabled)
-                                Logger.Error($"{id} Error executing mpi runner {threadIndex} on {pipeName} ", ex);
+                                Logger.Error(message, ex);
+                            Console.WriteLine($"{message} - {ex}");
                             if (!p.HasExited)
                                 p.Kill();
                             throw;
@@ -397,8 +399,8 @@ namespace DotMpi
                         if (!serverTask.IsCompleted)
                         {
                             //launchTask.Dispose();
-                            if (Logger.ErrorEnabled)
-                                Logger.Error($"{id} Task has been canceled because the process has exited unexpectedly.");
+                            //if (Logger.ErrorEnabled)
+                            //    Logger.Error($"{id} Task has been canceled because the process has exited unexpectedly.");
                         }
                     };
                     //launchTask.Wait();
@@ -468,7 +470,7 @@ namespace DotMpi
                 if (timeout == null)
                 {
                     task.Wait();
-                    Logger.Instance.OutputStream.Dispose();
+                    //Logger.Instance.OutputStream.Dispose();
                 }
                 else
                 {
@@ -523,6 +525,8 @@ namespace DotMpi
                         var value = result.Result;
                         if (value is not null)
                             Results[index] = value;
+                        if (result.HasError && result.ErrorData is not null)
+                            ErrorData[index] = result.ErrorData;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                         if (Logger.DebugEnabled)
                             Logger.Debug($"{id} Read result from client {index} {pipeName} - {json}");

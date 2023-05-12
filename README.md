@@ -68,7 +68,7 @@ What's new:
  - Unit tests now offer complete coverage of the public DotMpi api.
  - Build pipeline has been updated to produce pre-release alpha NuGet packages from the develop branch and pre-release beta release candidate NuGet packages from the release branch.
  - Error logging can be enabled using `WithLogging` using the Fluent Api. This sets the `EnableLogging` property on the `FunctionRunner` and also enables file-based logging for each process.
-
+ - An unmanaged library type loader has been added to handle methods that have libraries in the `/runtime/<target-platform>` instead of the root application directory.
 
 ### How to use
 
