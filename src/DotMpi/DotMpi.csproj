@@ -26,17 +26,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="DotMpi.runtimeconfig.json" copyToOutput="true">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		  <IncludeInPackage>true</IncludeInPackage>
-		  <CopyToOutput>true</CopyToOutput>
-		  <BuildAction>Content</BuildAction>
-		  <copyToOutput>true</copyToOutput>
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 	</ItemGroup>
 	<PropertyGroup>
@@ -52,7 +41,9 @@
 		<!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 	</PropertyGroup>
-
+	<PropertyGroup>
+		<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+	</PropertyGroup>
 	<ItemGroup>
 	  <None Include="..\..\LICENSE">
 	    <Pack>True</Pack>
