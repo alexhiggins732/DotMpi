@@ -136,6 +136,10 @@ namespace DotMpi
                         LogError($"[{DateTime.Now}] {id} Error Launching mpi runner: {string.Join(",", args)} - {ex}");
 
                     }
+                    finally
+                    {
+                        MpiRunner.Free();
+                    }
                     return;
                 }
                 else

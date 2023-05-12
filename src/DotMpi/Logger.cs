@@ -12,6 +12,7 @@
 
 */
 
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -63,7 +64,14 @@ namespace DotMpi
             DebugEnabled = VerboseEnabled = InfoEnabled = ErrorEnabled = value;
         }
 
-
+        public Logger(TextWriter? output = null)
+        {
+            OutputStream = output ?? Console.Out;
+            this.debugEnabled = staticDebugEnabled;
+            this.verboseEnabled = staticVerboseEnabled;
+            this.errorEnabled = staticErrorEnabled;
+            this.infoEnabled = staticInfoEnabled;
+        }
 
         public Logger(bool debugEnabled, bool verboseEnabled, bool errorEnabled, bool infoEnabled, TextWriter? output = null)
         {
@@ -113,6 +121,12 @@ namespace DotMpi
             if (!infoEnabled) return;
             OutputStream.WriteLine($"[{GetDate()}] [{nameof(Info)}] {message}");
             OutputStream.Flush();
+        }
+
+        ConcurrentDictionary<string, StreamWriter> logStreams = new();
+        internal void LogToFile(string logFileName)
+        {
+            this.OutputStream = logStreams.GetOrAdd(logFileName, x => new StreamWriter(x, true));
         }
     }
 }

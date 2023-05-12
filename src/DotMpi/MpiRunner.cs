@@ -19,13 +19,13 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Data;
 using System.Linq.Expressions;
-using System.Runtime.InteropServices;
 using System.ComponentModel;
 using static DotMpi.Mpi;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
+using System.Runtime.Loader;
 
 namespace DotMpi
 {
@@ -208,9 +208,12 @@ namespace DotMpi
             {
                 asm = assemblyRefs.GetOrAdd(assemblyName, x =>
                 {
-                    if (File.Exists($"{assemblyName}.dll"))
+                    var fullPath = Path.GetFullPath($"{assemblyName}.dll");
+                    if (File.Exists(fullPath))
                     {
-                        var fullPath = Path.GetFullPath($"{assemblyName}.dll");
+                        AssemblyLoadContext.Default.ResolvingUnmanagedDll
+                             += (assemblyLoadContext, assemblyName) =>
+                             Default_ResolvingUnmanagedDll(assemblyLoadContext, assemblyName);
                         return Assembly.UnsafeLoadFrom(fullPath);
                     }
                     else
@@ -267,6 +270,20 @@ namespace DotMpi
             }
             return methodResult;
         }
+        // attempt to search for dependencies in ./runtimes directory.
+
+        static List<UnmanagedLibraryLoader> UnmanagedLibraries = new();
+        private static IntPtr Default_ResolvingUnmanagedDll(Assembly loadingAssembly, string unmanagedDllName)
+        {
+
+            var loader= new UnmanagedLibraryLoader(loadingAssembly, unmanagedDllName);
+            UnmanagedLibraries.Add(loader);
+            return loader.OsHandle;
+        }
+        public static void Free()
+        {
+            UnmanagedLibraries.ForEach(x => x.Dispose());
+        }
 
         internal static void HandleRemoteCall(BinaryWriter writer, BinaryReader reader, string pipe, int threadIndex)
         {
@@ -291,7 +308,7 @@ namespace DotMpi
                 var debugJson = callData.DebugJson();
                 sw.Stop();
 
-                Logger.Info($"{id} [{pipe}] [Thread {threadIndex}] deserialized call data in {sw.Elapsed}: {debugJson}");      
+                Logger.Info($"{id} [{pipe}] [Thread {threadIndex}] deserialized call data in {sw.Elapsed}: {debugJson}");
             }
 
             sw.Restart();
